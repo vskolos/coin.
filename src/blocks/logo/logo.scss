@@ -4,5 +4,15 @@
     display: block;
     width: 53px;
     height: 17px;
+
+    @media (min-width: 480px) {
+      width: 79.5px;
+      height: 25.5px;
+    }
+
+    @media (min-width: 576px) {
+      width: 106px;
+      height: 34px;
+    }
   }
 }
