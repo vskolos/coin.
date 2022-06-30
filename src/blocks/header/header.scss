@@ -8,6 +8,13 @@
   }
 
   @media (min-width: 576px) {
-    padding: 25px 0;
+    padding: 24px 0;
+  }
+
+  .container {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 16px;
   }
 }

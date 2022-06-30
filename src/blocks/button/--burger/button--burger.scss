@@ -1,0 +1,12 @@
+.button--burger {
+  padding: 0;
+  justify-self: end;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  & > svg {
+    display: block;
+  }
+}
