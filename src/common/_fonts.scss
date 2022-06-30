@@ -1,0 +1,49 @@
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Ubuntu Regular'), local('Ubuntu-Regular'),
+       url('../assets/fonts/ubuntu-regular.woff2') format('woff2'),
+       url('../assets/fonts/ubuntu-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: local('Ubuntu Medium'), local('Ubuntu-Medium'),
+       url('../assets/fonts/ubuntu-medium.woff2') format('woff2'),
+       url('../assets/fonts/ubuntu-medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: local('Work Sans Regular'), local('Work-Sans-Regular'),
+       url('../assets/fonts/work-sans-regular.woff2') format('woff2'),
+       url('../assets/fonts/work-sans-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: local('Work Sans SemiBold'), local('Work-Sans-SemiBold'),
+       url('../assets/fonts/work-sans-semibold.woff2') format('woff2'),
+       url('../assets/fonts/work-sans-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: local('Work Sans Bold'), local('Work-Sans-Bold'),
+       url('../assets/fonts/work-sans-bold.woff2') format('woff2'),
+       url('../assets/fonts/work-sans-bold.woff') format('woff');
+}
