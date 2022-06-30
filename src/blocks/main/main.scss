@@ -1,14 +1,5 @@
 .main {
-  min-height: calc(100vh - 49px);
   display: flex;
-
-  @media (min-width: 480px) {
-    min-height: calc(100vh - 65.5px);
-  }
-
-  @media (min-width: 576px) {
-    min-height: calc(100vh - 84px);
-  }
 
   .container {
     padding: 20px;
