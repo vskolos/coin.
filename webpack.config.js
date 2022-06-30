@@ -28,8 +28,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Coin.',
-      template: './src/index.html',
       scriptLoading: 'module',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1.0',
+      },
     }),
     new FaviconsWebpackPlugin({
       logo: './src/assets/images/favicon.svg',
