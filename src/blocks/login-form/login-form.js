@@ -24,6 +24,10 @@ export default function createLoginForm() {
   const button = createPrimaryButton('Войти')
   button.type = 'submit'
 
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+  })
+
   form.append(title, login, password, button)
   return form
 }
