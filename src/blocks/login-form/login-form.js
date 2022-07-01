@@ -11,6 +11,7 @@ export default function createLoginForm() {
     el('input.login-form__input', {
       placeholder: 'Введите логин',
       type: 'text',
+      name: 'login',
     })
   )
   const password = el(
@@ -19,9 +20,10 @@ export default function createLoginForm() {
     el('input.login-form__input', {
       placeholder: 'Введите пароль',
       type: 'password',
+      name: 'password',
     })
   )
-  const button = createPrimaryButton('Войти')
+  const button = createPrimaryButton({ text: 'Войти' })
   button.type = 'submit'
 
   form.addEventListener('submit', (e) => {

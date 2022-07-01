@@ -3,4 +3,9 @@
   color: var(--clr-primary);
   background-color: var(--clr-white);
   border: 2px solid var(--clr-primary);
+
+  &:disabled {
+    background-color: var(--clr-secondary-2);
+    pointer-events: none;
+  }
 }

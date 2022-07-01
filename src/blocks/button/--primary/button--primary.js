@@ -1,8 +1,9 @@
 import createButton from '../button.js'
 import './button--primary.scss'
 
-export default function createPrimaryButton(text) {
-  const button = createButton(text)
+// data = { text, icon }
+export default function createPrimaryButton(data) {
+  const button = createButton(data)
   button.classList.add('button--primary')
 
   return button

@@ -1,0 +1,50 @@
+.account-card {
+  padding: 22px;
+  display: grid;
+  gap: 9px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+
+  &__id {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.22;
+
+    @media (min-width: 480px) {
+      grid-column: 1 / span 2;
+      font-size: 18px;
+    }
+  }
+
+  &__balance {
+    font-size: 16px;
+    line-height: 1.43;
+
+    @media (min-width: 480px) {
+      grid-column: 1 / span 2;
+      font-size: 14px;
+    }
+  }
+
+  &__transaction {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    line-height: 1.15;
+
+    @media (min-width: 480px) {
+      align-self: end;
+      font-size: 13px;
+    }
+
+    &-title {
+      font-weight: 700;
+    }
+  }
+
+  .button {
+    @media (min-width: 480px) {
+      justify-self: end;
+    }
+  }
+}
