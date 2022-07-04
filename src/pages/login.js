@@ -43,7 +43,7 @@ export default function renderLoginPage() {
       alert('Ошибка: в ответе сервера отсутствует токен')
     } else {
       localStorage.setItem('token', data.payload.token)
-      reload('?page=accounts')
+      reload()
     }
   })
 }

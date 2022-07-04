@@ -33,12 +33,12 @@ export default function renderAccountPage(id) {
   const logo = createLogo()
   const burger = createButton({ icon: Burger })
   const menu = createMenu([
-    { text: 'Банкоматы', disabled: false, handler: () => reload('?page=map') },
-    { text: 'Счета', disabled: false, handler: () => reload('?page=accounts') },
+    { text: 'Банкоматы', disabled: false, handler: () => reload('/map') },
+    { text: 'Счета', disabled: false, handler: () => reload('/accounts') },
     {
       text: 'Валюта',
       disabled: false,
-      handler: () => reload('?page=currency'),
+      handler: () => reload('/currency'),
     },
     { text: 'Выйти', disabled: false, handler: logout },
   ])
@@ -59,7 +59,7 @@ export default function renderAccountPage(id) {
     })
 
     const button = topRow.querySelector('.button')
-    button.addEventListener('click', () => reload('?page=accounts'))
+    button.addEventListener('click', () => reload('/accounts'))
 
     mainContainer.append(topRow)
   })

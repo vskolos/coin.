@@ -8,6 +8,7 @@ module.exports = {
   output: {
     filename: 'app.js',
     clean: true,
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -45,5 +46,6 @@ module.exports = {
   devServer: {
     hot: true,
     open: true,
+    historyApiFallback: true,
   },
 }
