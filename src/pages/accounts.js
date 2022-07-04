@@ -30,7 +30,7 @@ import Burger from '../assets/images/burger.svg'
 import Plus from '../assets/images/plus.svg'
 
 // Utilities
-import reload from '../utilities/reload'
+import reload from '../utilities/reload.js'
 
 export default function renderAccountsPage() {
   const body = document.body
@@ -67,7 +67,6 @@ export default function renderAccountsPage() {
 
   button.addEventListener('click', async () => {
     const data = await createAccount(localStorage.token)
-    console.log(data)
     addItemToAccountsList(accountsList, data.payload)
   })
 

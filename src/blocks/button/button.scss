@@ -2,6 +2,7 @@
   padding: 16px 21.5px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   font-weight: 500;
   font-size: 16px;
@@ -15,15 +16,6 @@
   &__icon {
     & > svg {
       display: block;
-    }
-  }
-
-  &--burger {
-    padding: 0;
-    justify-self: end;
-
-    @media (min-width: 768px) {
-      display: none;
     }
   }
 }

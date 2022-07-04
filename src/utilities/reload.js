@@ -15,7 +15,7 @@ export default function reload(path = '') {
     renderLoginPage()
   } else if (pathname === '/accounts') {
     renderAccountsPage()
-  } else if (pathname.match(/^\/account\//)) {
+  } else if (pathname.match(/^\/accounts\/\d+$/)) {
     renderAccountPage(pathname.split('/')[2])
   } else {
     history.pushState({}, '', `${origin}/accounts`)

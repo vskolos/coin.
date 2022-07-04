@@ -1,0 +1,14 @@
+.account-info {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+
+  @media (min-width: 480px) {
+    gap: 50px;
+  }
+
+  @media (min-width: 1200px) {
+    grid-auto-flow: column;
+  }
+}

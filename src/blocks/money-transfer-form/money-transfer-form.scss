@@ -1,0 +1,93 @@
+.money-transfer-form {
+  width: 100%;
+  padding: 25px;
+  background-color: var(--clr-gray-7);
+  border-radius: 25px;
+  display: grid;
+  align-items: center;
+  gap: 16px;
+
+  @media (min-width: 480px) {
+    padding: 25px 30px;
+    justify-items: start;
+    border-radius: 30px;
+    gap: 20px;
+  }
+
+  @media (min-width: 576px) {
+    padding: 25px 50px;
+    border-radius: 50px;
+    gap: 25px;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 668px;
+    grid-template-columns: max-content auto;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 606px;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: 'Work Sans', Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.17;
+
+    @media (min-width: 768px) {
+      grid-column: span 2;
+    }
+  }
+
+  &__label {
+    position: relative;
+    width: 100%;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    @media (min-width: 768px) {
+      display: contents;
+    }
+
+    &-text {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.25;
+
+      @media (min-width: 768px) {
+        justify-self: end;
+      }
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    border: 1px solid var(--clr-gray-5);
+    border-radius: 7px;
+
+    @media (min-width: 480px) {
+      font-size: 16px;
+    }
+
+    @media (min-width: 1200px) {
+      width: 300px;
+    }
+
+    &::placeholder {
+      color: var(--clr-gray-4);
+    }
+  }
+
+  .button {
+    @media (min-width: 768px) {
+      grid-column: 2;
+    }
+  }
+}

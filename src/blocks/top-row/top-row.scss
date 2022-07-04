@@ -137,12 +137,16 @@
 
     @media (min-width: 576px) {
       grid-row: 2;
-      font-size: 18.5px;
+      font-size: 16px;
       justify-self: end;
     }
 
     @media (min-width: 768px) {
       font-size: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      grid-column: 3;
     }
 
     &-title {

@@ -30,7 +30,7 @@ export default function createAccountCard(account) {
 
   const button = createPrimaryButton({ text: 'Открыть' })
 
-  button.addEventListener('click', () => reload(`/account/${account.account}`))
+  button.addEventListener('click', () => reload(`/accounts/${account.account}`))
 
   card.append(id, balance, lastTransaction, button)
 
