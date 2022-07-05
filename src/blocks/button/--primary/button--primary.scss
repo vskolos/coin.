@@ -1,4 +1,23 @@
 .button--primary {
   background-color: var(--clr-primary);
   color: var(--clr-white);
+  transition: background-color 100ms ease-in-out;
+
+  &:hover {
+    background-color: var(--clr-primary-light);
+  }
+
+  &:focus-visible {
+    background-color: var(--clr-primary-light);
+    outline: none;
+  }
+
+  &:active {
+    background-color: var(--clr-primary-shade);
+  }
+
+  &:disabled {
+    background-color: var(--clr-gray-5);
+    pointer-events: none;
+  }
 }
