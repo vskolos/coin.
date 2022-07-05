@@ -58,7 +58,7 @@ export default async function renderAccountsPage(sort = '') {
     title: 'Ваши счета',
     filter: [
       { text: 'Сортировка', value: '' },
-      { text: 'По номеру', value: 'id' },
+      { text: 'По номеру', value: 'account' },
       { text: 'По балансу', value: 'balance' },
       { text: 'По последней транзакции', value: 'last-transaction' },
     ],

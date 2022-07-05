@@ -5,7 +5,7 @@
 export default function sortAccounts(accounts, sortBy = '') {
   if (!sortBy) {
     return
-  } else if (sortBy === 'id') {
+  } else if (sortBy === 'account') {
     accounts.sort((a, b) => a.account - b.account)
   } else if (sortBy === 'balance') {
     accounts.sort((a, b) => b.balance - a.balance)
