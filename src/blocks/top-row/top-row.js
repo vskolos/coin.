@@ -3,7 +3,8 @@ import createPrimaryButton from '../button/--primary/button--primary'
 import './top-row.scss'
 
 // data = { title, filter, button, account, balance }
-// filter = { placeholder, options }
+// filter = { option1, option2, ... }
+// optionN = { text, value }
 // button = { text, icon }
 export default function createTopRow(data) {
   const row = el('.top-row')
@@ -14,14 +15,10 @@ export default function createTopRow(data) {
   if (data.filter) {
     const select = el('select.top-row__select.js-choices')
 
-    if (data.filter.placeholder) {
+    data.filter.forEach((option) => {
       select.append(
-        el('option.top-row__option', data.filter.placeholder, { value: '' })
+        el('option.top-row__option', option.text, { value: option.value })
       )
-    }
-
-    data.filter.options.forEach((option) => {
-      select.append(el('option.top-row__option', option))
     })
 
     row.append(select)

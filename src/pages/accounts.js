@@ -31,8 +31,12 @@ import Plus from '../assets/images/plus.svg'
 
 // Utilities
 import reload from '../utilities/reload'
+import sortAccounts from '../utilities/sort-accounts'
 
-export default function renderAccountsPage() {
+export default async function renderAccountsPage(sort = '') {
+  const response = await accounts(localStorage.token)
+  const data = response.payload
+
   const body = document.body
   const header = createHeader()
   const headerContainer = createContainer()
@@ -52,16 +56,21 @@ export default function renderAccountsPage() {
   const mainContainer = createContainer()
   const topRow = createTopRow({
     title: 'Ваши счета',
-    filter: {
-      placeholder: 'Сортировка',
-      options: ['По номеру', 'По балансу', 'По последней транзакции'],
-    },
+    filter: [
+      { text: 'Сортировка', value: '' },
+      { text: 'По номеру', value: 'id' },
+      { text: 'По балансу', value: 'balance' },
+      { text: 'По последней транзакции', value: 'last-transaction' },
+    ],
     button: {
       text: 'Создать новый счёт',
       icon: Plus,
     },
   })
-  let accountsList
+
+  sortAccounts(data, sort)
+
+  const accountsList = createAccountsList(data)
 
   const button = topRow.querySelector('.button')
 
@@ -73,11 +82,7 @@ export default function renderAccountsPage() {
   headerContainer.append(logo, burger, menu)
   header.append(headerContainer)
 
-  mainContainer.append(topRow)
-  accounts(localStorage.token).then((data) => {
-    accountsList = createAccountsList(data.payload)
-    mainContainer.append(accountsList)
-  })
+  mainContainer.append(topRow, accountsList)
 
   main.append(mainContainer)
 
@@ -90,10 +95,18 @@ export default function renderAccountsPage() {
   body.append(header, main)
 
   const select = document.querySelector('.js-choices')
-  new Choices(select, {
+  const filter = new Choices(select, {
     allowHTML: false,
     searchEnabled: false,
     shouldSort: false,
     itemSelectText: '',
+  })
+
+  if (sort) {
+    filter.setChoiceByValue(sort)
+  }
+
+  select.addEventListener('change', (event) => {
+    reload(`/accounts?sort=${event.detail.value}`)
   })
 }
