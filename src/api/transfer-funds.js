@@ -1,7 +1,7 @@
 import { URL } from './config'
 
-export default async function transferFunds(from, to, amount, token) {
-  const data = { from: from, to: to, amount: amount }
+// data = { from, to, amount }
+export default async function transferFunds(data, token) {
   const response = await fetch(`${URL}/transfer-funds`, {
     method: 'POST',
     headers: {

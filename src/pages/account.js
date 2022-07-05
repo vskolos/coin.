@@ -28,6 +28,7 @@ import createMoneyTransferHistory from '../blocks/money-transfer-history/money-t
 
 // API
 import account from '../api/account'
+import transferFunds from '../api/transfer-funds'
 
 // Utilities
 import logout from '../utilities/logout'
@@ -75,6 +76,21 @@ export default async function renderAccountPage(id) {
 
   const accountInfo = createAccountInfo()
   const moneyTransferForm = createMoneyTransferForm()
+
+  moneyTransferForm.addEventListener('submit', async () => {
+    const response = await transferFunds(
+      {
+        from: data.account,
+        to: moneyTransferForm.account.value,
+        amount: moneyTransferForm.amount.value,
+      },
+      localStorage.token
+    )
+    if (response.error) {
+      alert(response.error)
+    }
+    reload(`/accounts/${data.account}`)
+  })
 
   const balanceChart = createBalanceChart('Динамика баланса')
   const moneyTransferHistory = createMoneyTransferHistory(data, 10)
