@@ -1,6 +1,4 @@
-function getShortMonthName(date) {
-  return date.toLocaleString('ru-RU', { month: 'short' }).slice(0, 3)
-}
+import shortMonthName from './short-month-name'
 
 // account = { account, balance, mine, transactions }
 // transactions = [ transaction1, transaction2, ... ]
@@ -15,7 +13,7 @@ export default function monthlyBalance(account, months) {
 
   const monthlyBalance = [
     {
-      month: getShortMonthName(date),
+      month: shortMonthName(date),
       balance: balance,
     },
   ]
@@ -30,7 +28,7 @@ export default function monthlyBalance(account, months) {
     } else {
       firstDayCurrentMonth.setMonth(firstDayCurrentMonth.getMonth() - 1)
       monthlyBalance.push({
-        month: getShortMonthName(firstDayCurrentMonth),
+        month: shortMonthName(firstDayCurrentMonth),
         balance: balance,
       })
 

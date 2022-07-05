@@ -9,7 +9,20 @@
   }
 
   @media (min-width: 1200px) {
-    grid-auto-flow: column;
     grid-template-columns: 606px auto;
+  }
+
+  .balance-chart {
+    &--wide {
+      @media (min-width: 1200px) {
+        grid-column: span 2;
+      }
+    }
+  }
+
+  .money-transfer-history {
+    @media (min-width: 1200px) {
+      grid-column: 1 / span 2;
+    }
   }
 }

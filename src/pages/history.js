@@ -15,25 +15,24 @@ import createContainer from '../blocks/container/container'
 import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import createAccountInfo from '../blocks/account-info/account-info'
-import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
 import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
 
 // API
 import account from '../api/account'
-import transferFunds from '../api/transfer-funds'
 
 // Utilities
 import logout from '../utilities/logout'
 import reload from '../utilities/reload'
 import monthlyBalance from '../utilities/monthly-balance'
+import monthlyTransactions from '../utilities/monthly-transactions'
 import chartInit from '../utilities/chart-init'
 
 // SVG
 import Burger from '../assets/images/burger.svg'
 import Arrow from '../assets/images/arrow.svg'
 
-export default async function renderAccountPage(id) {
+export default async function renderHistoryPage(id) {
   const response = await account(id, localStorage.token)
   const data = response.payload
 
@@ -56,7 +55,7 @@ export default async function renderAccountPage(id) {
   const mainContainer = createContainer()
 
   const topRow = createTopRow({
-    title: 'Просмотр счёта',
+    title: 'История баланса',
     account: data.account,
     balance: data.balance,
     button: {
@@ -66,42 +65,23 @@ export default async function renderAccountPage(id) {
   })
 
   const backButton = topRow.querySelector('.button')
-  backButton.addEventListener('click', () => reload('/accounts'))
+  backButton.addEventListener('click', () =>
+    reload(`/accounts/${data.account}`)
+  )
 
   const accountInfo = createAccountInfo()
-  const moneyTransferForm = createMoneyTransferForm()
-
-  moneyTransferForm.addEventListener('submit', async () => {
-    const response = await transferFunds(
-      {
-        from: data.account,
-        to: moneyTransferForm.account.value,
-        amount: moneyTransferForm.amount.value,
-      },
-      localStorage.token
-    )
-    if (response.error) {
-      alert(response.error)
-    }
-    reload(`/accounts/${data.account}`)
-  })
-
   const balanceChart = createBalanceChart('Динамика баланса')
-  balanceChart.style.cursor = 'pointer'
-  balanceChart.addEventListener('click', () =>
-    reload(`/accounts/${data.account}/history`)
+  balanceChart.classList.add('balance-chart--wide')
+  const transactionsChart = createBalanceChart(
+    'Соотношение входящих/исходящих транзакций'
   )
-
-  const moneyTransferHistory = createMoneyTransferHistory(data, 10)
-  moneyTransferHistory.style.cursor = 'pointer'
-  moneyTransferHistory.addEventListener('click', () =>
-    reload(`/accounts/${data.account}/history`)
-  )
+  transactionsChart.classList.add('balance-chart--wide')
+  const moneyTransferHistory = createMoneyTransferHistory(data, 25)
 
   headerContainer.append(logo, burger, menu)
   header.append(headerContainer)
 
-  accountInfo.append(moneyTransferForm, balanceChart, moneyTransferHistory)
+  accountInfo.append(balanceChart, transactionsChart, moneyTransferHistory)
   mainContainer.append(topRow, accountInfo)
   main.append(mainContainer)
 
@@ -114,7 +94,7 @@ export default async function renderAccountPage(id) {
   body.append(header, main)
 
   const balanceChartCanvas = balanceChart.querySelector('canvas')
-  const monthlyBalanceData = monthlyBalance(data, 6)
+  const monthlyBalanceData = monthlyBalance(data, 12)
 
   chartInit(
     balanceChartCanvas,
@@ -130,6 +110,40 @@ export default async function renderAccountPage(id) {
     {
       arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
       arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
+    }
+  )
+
+  const transactionsChartCanvas = transactionsChart.querySelector('canvas')
+  const monthlyTransactionsData = monthlyTransactions(data, 12)
+  const monthlyTransactionsSum = []
+
+  monthlyTransactionsData
+    .map((entry) => entry.income)
+    .forEach((income, index) => {
+      monthlyTransactionsSum.push(
+        income + monthlyTransactionsData.map((entry) => entry.outcome)[index]
+      )
+    })
+
+  chartInit(
+    transactionsChartCanvas,
+    {
+      labels: monthlyTransactionsData.map((entry) => entry.month),
+      datasets: [
+        {
+          data: monthlyTransactionsData.map((entry) => entry.outcome),
+          backgroundColor: '#FD4E5D',
+        },
+        {
+          data: monthlyTransactionsData.map((entry) => entry.income),
+          backgroundColor: '#76CA66',
+        },
+      ],
+    },
+    {
+      arrayForMin: monthlyTransactionsSum,
+      arrayForMid: monthlyTransactionsData.map((entry) => entry.outcome),
+      arrayForMax: monthlyTransactionsSum,
     }
   )
 }
