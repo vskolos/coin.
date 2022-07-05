@@ -9,7 +9,10 @@ import reload from '../../utilities/reload'
 export default function createAccountCard(account) {
   const card = el('.account-card')
   const id = el('.account-card__id', account.account)
-  const balance = el('.account-card__balance', `${account.balance} ₽`)
+  const balance = el(
+    '.account-card__balance',
+    `${account.balance.toLocaleString('ru-RU')} ₽`
+  )
 
   const lastTransaction = el('.account-card__transaction')
   const lastTransactionTitle = el(

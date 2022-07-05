@@ -42,7 +42,10 @@ export default function createTopRow(data) {
       el(
         '.top-row__balance',
         el('span.top-row__balance-title', 'Баланс'),
-        el('span.top-row__balance-amount', `${data.balance}`)
+        el(
+          'span.top-row__balance-amount',
+          `${data.balance.toLocaleString('ru-RU')}`
+        )
       )
     )
   }

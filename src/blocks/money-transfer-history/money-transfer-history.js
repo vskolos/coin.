@@ -32,7 +32,7 @@ export default function createMoneyTransferHistory(account, count) {
       const colTo = el('.money-transfer-history__row-text', transaction.to)
       const colAmount = el(
         '.money-transfer-history__row-text',
-        transaction.amount
+        transaction.amount.toLocaleString('ru-RU')
       )
 
       if (transaction.to === account.account) {
