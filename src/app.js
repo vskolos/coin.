@@ -1,3 +1,3 @@
-import reload from './utilities/reload.js'
+import reload from './utilities/reload'
 
 reload()

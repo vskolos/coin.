@@ -1,6 +1,6 @@
 import { el } from 'redom'
 import './accounts-list.scss'
-import createAccountCard from '../account-card/account-card.js'
+import createAccountCard from '../account-card/account-card'
 
 export function addItemToAccountsList(list, account) {
   const item = el('li.accounts-list__item')

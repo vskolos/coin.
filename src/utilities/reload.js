@@ -1,6 +1,6 @@
-import renderAccountsPage from '../pages/accounts.js'
-import renderAccountPage from '../pages/account.js'
-import renderLoginPage from '../pages/login.js'
+import renderAccountsPage from '../pages/accounts'
+import renderAccountPage from '../pages/account'
+import renderLoginPage from '../pages/login'
 
 export default function reload(path = '') {
   const origin = location.origin

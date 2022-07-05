@@ -1,5 +1,5 @@
 import { el } from 'redom'
-import createSecondaryButton from '../button/--secondary/button--secondary.js'
+import createSecondaryButton from '../button/--secondary/button--secondary'
 import './menu.scss'
 
 // items = [ item1, item2, ... ]

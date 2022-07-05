@@ -7,30 +7,30 @@ import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 import Choices from 'choices.js'
 
 // Blocks
-import createHeader from '../blocks/header/header.js'
-import createLogo from '../blocks/logo/logo.js'
-import createMenu from '../blocks/menu/menu.js'
-import createMain from '../blocks/main/main.js'
-import createContainer from '../blocks/container/container.js'
-import createButton from '../blocks/button/button.js'
-import createTopRow from '../blocks/top-row/top-row.js'
+import createHeader from '../blocks/header/header'
+import createLogo from '../blocks/logo/logo'
+import createMenu from '../blocks/menu/menu'
+import createMain from '../blocks/main/main'
+import createContainer from '../blocks/container/container'
+import createButton from '../blocks/button/button'
+import createTopRow from '../blocks/top-row/top-row'
 import createAccountsList, {
   addItemToAccountsList,
-} from '../blocks/accounts-list/accounts-list.js'
+} from '../blocks/accounts-list/accounts-list'
 
 // API
-import accounts from '../api/accounts.js'
-import createAccount from '../api/create-account.js'
+import accounts from '../api/accounts'
+import createAccount from '../api/create-account'
 
 // Pages
-import logout from '../utilities/logout.js'
+import logout from '../utilities/logout'
 
 // SVG
 import Burger from '../assets/images/burger.svg'
 import Plus from '../assets/images/plus.svg'
 
 // Utilities
-import reload from '../utilities/reload.js'
+import reload from '../utilities/reload'
 
 export default function renderAccountsPage() {
   const body = document.body

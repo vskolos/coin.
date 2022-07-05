@@ -14,25 +14,25 @@ import {
 } from 'chart.js'
 
 // Blocks
-import createHeader from '../blocks/header/header.js'
-import createLogo from '../blocks/logo/logo.js'
-import createMenu from '../blocks/menu/menu.js'
-import createMain from '../blocks/main/main.js'
-import createContainer from '../blocks/container/container.js'
-import createButton from '../blocks/button/button.js'
-import createTopRow from '../blocks/top-row/top-row.js'
-import createAccountInfo from '../blocks/account-info/account-info.js'
-import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form.js'
-import createBalanceChart from '../blocks/balance-chart/balance-chart.js'
+import createHeader from '../blocks/header/header'
+import createLogo from '../blocks/logo/logo'
+import createMenu from '../blocks/menu/menu'
+import createMain from '../blocks/main/main'
+import createContainer from '../blocks/container/container'
+import createButton from '../blocks/button/button'
+import createTopRow from '../blocks/top-row/top-row'
+import createAccountInfo from '../blocks/account-info/account-info'
+import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
+import createBalanceChart from '../blocks/balance-chart/balance-chart'
 import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
 
 // API
-import account from '../api/account.js'
+import account from '../api/account'
 
 // Utilities
-import logout from '../utilities/logout.js'
-import reload from '../utilities/reload.js'
-import monthlyBalance from '../utilities/monthly-balance.js'
+import logout from '../utilities/logout'
+import reload from '../utilities/reload'
+import monthlyBalance from '../utilities/monthly-balance'
 
 // SVG
 import Burger from '../assets/images/burger.svg'
@@ -75,6 +75,7 @@ export default async function renderAccountPage(id) {
 
   const accountInfo = createAccountInfo()
   const moneyTransferForm = createMoneyTransferForm()
+
   const balanceChart = createBalanceChart('Динамика баланса')
   const moneyTransferHistory = createMoneyTransferHistory(data, 10)
 

@@ -1,4 +1,4 @@
-import createButton from '../button.js'
+import createButton from '../button'
 import './button--primary.scss'
 
 // data = { text, icon }

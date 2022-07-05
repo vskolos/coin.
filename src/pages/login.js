@@ -3,17 +3,17 @@ import 'normalize.css'
 import '../common/common.scss'
 
 // Blocks
-import createHeader from '../blocks/header/header.js'
-import createLogo from '../blocks/logo/logo.js'
-import createMain from '../blocks/main/main.js'
-import createContainer from '../blocks/container/container.js'
-import createLoginForm from '../blocks/login-form/login-form.js'
+import createHeader from '../blocks/header/header'
+import createLogo from '../blocks/logo/logo'
+import createMain from '../blocks/main/main'
+import createContainer from '../blocks/container/container'
+import createLoginForm from '../blocks/login-form/login-form'
 
 // API
-import login from '../api/login.js'
+import login from '../api/login'
 
 // Utilities
-import reload from '../utilities/reload.js'
+import reload from '../utilities/reload'
 
 export default function renderLoginPage() {
   const body = document.body

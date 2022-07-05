@@ -1,5 +1,5 @@
 import { el } from 'redom'
-import createPrimaryButton from '../button/--primary/button--primary.js'
+import createPrimaryButton from '../button/--primary/button--primary'
 import './login-form.scss'
 
 export default function createLoginForm() {

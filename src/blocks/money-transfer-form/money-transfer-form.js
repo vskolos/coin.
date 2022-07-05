@@ -1,5 +1,5 @@
 import { el } from 'redom'
-import createPrimaryButton from '../button/--primary/button--primary.js'
+import createPrimaryButton from '../button/--primary/button--primary'
 import './money-transfer-form.scss'
 import Envelope from '../../assets/images/envelope.svg'
 

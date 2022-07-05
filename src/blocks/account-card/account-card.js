@@ -1,6 +1,6 @@
 import { el } from 'redom'
 import './account-card.scss'
-import createPrimaryButton from '../button/--primary/button--primary.js'
+import createPrimaryButton from '../button/--primary/button--primary'
 import reload from '../../utilities/reload'
 
 // account = { account, balance, mine, transactions }

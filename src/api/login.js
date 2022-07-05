@@ -1,4 +1,4 @@
-import { URL } from './config.js'
+import { URL } from './config'
 
 export default async function login(login, password) {
   const data = { login: login, password: password }

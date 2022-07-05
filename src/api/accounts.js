@@ -1,4 +1,4 @@
-import { URL } from './config.js'
+import { URL } from './config'
 
 export default async function accounts(token) {
   const response = await fetch(`${URL}/accounts`, {
