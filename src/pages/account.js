@@ -92,8 +92,6 @@ export default async function renderAccountPage(id) {
   body.append(header, main)
 
   const balanceChartCanvas = balanceChart.querySelector('canvas')
-  balanceChartCanvas.width = 238
-  balanceChartCanvas.style.maxWidth = '100%'
 
   Chart.register(BarElement, BarController, CategoryScale, LinearScale)
   Chart.defaults.font = {
@@ -121,19 +119,19 @@ export default async function renderAccountPage(id) {
       ],
     },
     options: {
-      aspectRatio: 3.09,
-      onResize: (chart) => {
-        if (window.innerWidth >= 576) {
+      maintainAspectRatio: false,
+      onResize: (chart, size) => {
+        if (size.width >= 480) {
           chart.data.labels = chartMonthNames
           chart.data.datasets[0].data = chartBalances
         } else {
           chart.data.labels = chartMonthNames.slice(3)
           chart.data.datasets[0].data = chartBalances.slice(3)
         }
-        if (window.innerWidth >= 768) {
+        if (size.width >= 320) {
           Chart.defaults.font.size = 20
         } else {
-          Chart.defaults.font.size = 10
+          Chart.defaults.font.size = 14
         }
       },
       backgroundColor: '#116ACC',
@@ -144,6 +142,11 @@ export default async function renderAccountPage(id) {
             drawOnChartArea: false,
             drawBorder: false,
             drawTicks: false,
+          },
+          ticks: {
+            font: {
+              weight: 700,
+            },
           },
         },
         y: {
@@ -167,11 +170,12 @@ export default async function renderAccountPage(id) {
                 ? Math.ceil(val).toLocaleString('ru-RU')
                 : ''
             },
+            padding: 24,
           },
         },
       },
       layout: {
-        padding: 5,
+        padding: 10,
       },
     },
     plugins: [

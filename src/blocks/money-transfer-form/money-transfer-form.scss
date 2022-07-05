@@ -5,13 +5,12 @@
   border-radius: 25px;
   display: grid;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 
   @media (min-width: 480px) {
     padding: 25px 30px;
     justify-items: start;
     border-radius: 30px;
-    gap: 20px;
   }
 
   @media (min-width: 576px) {
