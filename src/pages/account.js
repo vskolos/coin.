@@ -123,17 +123,21 @@ export default async function renderAccountPage(id) {
 
   const monthlyBalances = monthlyBalance(data, 6)
   const chartMonthNames = monthlyBalances.map((entry) => entry.month)
+  const chartMonthNamesSlice =
+    chartMonthNames.slice(-3).length > 0
+      ? chartMonthNames.slice(-3)
+      : chartMonthNames
   const chartBalances = monthlyBalances.map((entry) => entry.balance)
+  const chartBalancesSlice =
+    chartBalances.slice(-3).length > 0 ? chartBalances.slice(-3) : chartBalances
 
   new Chart(balanceChartCanvas, {
     type: 'bar',
     data: {
-      labels:
-        window.innerWidth > 576 ? chartMonthNames : chartMonthNames.slice(3),
+      labels: window.innerWidth > 576 ? chartMonthNames : chartMonthNamesSlice,
       datasets: [
         {
-          data:
-            window.innerWidth > 576 ? chartBalances : chartBalances.slice(3),
+          data: window.innerWidth > 576 ? chartBalances : chartBalancesSlice,
         },
       ],
     },
@@ -144,8 +148,8 @@ export default async function renderAccountPage(id) {
           chart.data.labels = chartMonthNames
           chart.data.datasets[0].data = chartBalances
         } else {
-          chart.data.labels = chartMonthNames.slice(3)
-          chart.data.datasets[0].data = chartBalances.slice(3)
+          chart.data.labels = chartMonthNamesSlice
+          chart.data.datasets[0].data = chartBalancesSlice
         }
         if (size.width >= 320) {
           Chart.defaults.font.size = 20
@@ -172,11 +176,11 @@ export default async function renderAccountPage(id) {
           min:
             window.innerWidth >= 576
               ? Math.min(Math.min(...chartBalances), 0)
-              : Math.min(Math.min(...chartBalances.slice(3)), 0),
+              : Math.min(Math.min(...chartBalancesSlice), 0),
           max:
             window.innerWidth >= 576
               ? Math.max(...chartBalances)
-              : Math.max(...chartBalances.slice(3)),
+              : Math.max(...chartBalancesSlice),
           grid: {
             drawOnChartArea: false,
             drawBorder: false,
