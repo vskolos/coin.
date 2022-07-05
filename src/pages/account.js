@@ -24,6 +24,7 @@ import createTopRow from '../blocks/top-row/top-row.js'
 import createAccountInfo from '../blocks/account-info/account-info.js'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form.js'
 import createBalanceChart from '../blocks/balance-chart/balance-chart.js'
+import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
 
 // API
 import account from '../api/account.js'
@@ -75,11 +76,12 @@ export default async function renderAccountPage(id) {
   const accountInfo = createAccountInfo()
   const moneyTransferForm = createMoneyTransferForm()
   const balanceChart = createBalanceChart('Динамика баланса')
+  const moneyTransferHistory = createMoneyTransferHistory(data, 10)
 
   headerContainer.append(logo, burger, menu)
   header.append(headerContainer)
 
-  accountInfo.append(moneyTransferForm, balanceChart)
+  accountInfo.append(moneyTransferForm, balanceChart, moneyTransferHistory)
   mainContainer.append(topRow, accountInfo)
   main.append(mainContainer)
 

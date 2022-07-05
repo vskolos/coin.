@@ -10,5 +10,6 @@
 
   @media (min-width: 1200px) {
     grid-auto-flow: column;
+    grid-template-columns: 606px auto;
   }
 }
