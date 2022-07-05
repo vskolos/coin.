@@ -1,5 +1,6 @@
 import renderAccountsPage from '../pages/accounts'
 import renderAccountPage from '../pages/account'
+import renderHistoryPage from '../pages/history'
 import renderLoginPage from '../pages/login'
 
 export default function reload(path = '') {
@@ -8,7 +9,11 @@ export default function reload(path = '') {
   const search = path ? path.split('?')[1] : location.search
 
   if (path) {
-    history.pushState({}, '', `${origin}${pathname}?${search}`)
+    history.pushState(
+      {},
+      '',
+      `${origin}${pathname}${search ? `?${search}` : ''}`
+    )
   }
 
   if (!localStorage.token) {
@@ -23,6 +28,8 @@ export default function reload(path = '') {
     }
   } else if (pathname.match(/^\/accounts\/\d+$/)) {
     renderAccountPage(pathname.split('/')[2])
+  } else if (pathname.match(/^\/accounts\/\d+\/history$/)) {
+    renderHistoryPage(pathname.split('/')[2])
   } else {
     history.pushState({}, '', `${origin}/accounts`)
     renderAccountsPage()
