@@ -15,13 +15,12 @@ import createContainer from '../blocks/container/container'
 import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import createCurrencyInfo from '../blocks/currency-info/currency-info'
-import createAccountCurrency from '../blocks/account-currency/account-currency'
+import AccountCurrency from '../blocks/account-currency/account-currency'
 import createCurrencyExchangeForm from '../blocks/currency-exchange-form/currency-exchange-form'
 import CurrencyFeed from '../blocks/currency-feed/currency-feed'
 
 // API
 import allCurrencies from '../api/all-currencies'
-import currencies from '../api/currencies'
 import currencyBuy from '../api/currency-buy'
 
 // SVG
@@ -32,10 +31,8 @@ import logout from '../utilities/logout'
 import reload from '../utilities/reload'
 
 export default async function renderCurrencyPage() {
-  const response1 = await allCurrencies()
-  const response2 = await currencies(localStorage.token)
-  const allCurrenciesList = response1.payload
-  const accountCurrencyData = response2.payload
+  const response = await allCurrencies()
+  const allCurrenciesList = response.payload
 
   const body = document.body
   const header = createHeader()
@@ -58,17 +55,17 @@ export default async function renderCurrencyPage() {
     title: 'Валютный обмен',
   })
   const currencyInfo = createCurrencyInfo()
-  const accountCurrency = createAccountCurrency(accountCurrencyData)
+  const accountCurrency = new AccountCurrency(localStorage.token)
   const currencyExchangeForm = createCurrencyExchangeForm(allCurrenciesList)
 
-  const maxCurrencyFeedRows = Object.keys(accountCurrencyData).length + 6
+  const maxCurrencyFeedRows = 21
   const currencyFeed = new CurrencyFeed(maxCurrencyFeedRows)
 
   headerContainer.append(logo, burger, menu)
   header.append(headerContainer)
 
   currencyInfo.append(
-    accountCurrency,
+    accountCurrency.element,
     currencyExchangeForm,
     currencyFeed.element
   )
@@ -109,6 +106,6 @@ export default async function renderCurrencyPage() {
       },
       localStorage.token
     )
-    reload('/currency')
+    accountCurrency.reload(localStorage.token)
   })
 }
