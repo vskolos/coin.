@@ -77,6 +77,10 @@
       }
     }
 
+    &.is-flipped .choices__list--dropdown {
+      margin-bottom: 1px;
+    }
+
     &__list--single {
       padding: 0;
     }
