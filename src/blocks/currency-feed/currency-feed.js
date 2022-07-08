@@ -18,6 +18,14 @@ export default class CurrencyFeed {
 
     div.append(title, ul)
 
+    if (localStorage.currencyFeed) {
+      const data = JSON.parse(localStorage.currencyFeed)
+      localStorage.currencyFeed = '[]'
+      data.forEach((entry) => this.add(entry))
+    } else {
+      localStorage.currencyFeed = '[]'
+    }
+
     this.init()
   }
 
@@ -52,5 +60,12 @@ export default class CurrencyFeed {
     }
     li.append(code, rate)
     this.list.prepend(li)
+
+    const localStorageData = JSON.parse(localStorage.currencyFeed)
+    while (localStorageData.length >= this.rows) {
+      localStorageData.pop()
+    }
+    localStorageData.push(data)
+    localStorage.setItem('currencyFeed', JSON.stringify(localStorageData))
   }
 }
