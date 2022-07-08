@@ -43,7 +43,7 @@ export default async function renderCurrencyPage() {
   const logo = createLogo()
   const burger = createButton({ icon: Burger })
   const menu = createMenu([
-    { text: 'Банкоматы', disabled: false, handler: () => reload('/map') },
+    { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: false, handler: () => reload('/accounts') },
     {
       text: 'Валюта',

@@ -43,7 +43,7 @@ export default async function renderAccountsPage(sort = '') {
   const logo = createLogo()
   const burger = createButton({ icon: Burger })
   const menu = createMenu([
-    { text: 'Банкоматы', disabled: false, handler: () => reload('/map') },
+    { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: true, handler: () => reload('/accounts') },
     {
       text: 'Валюта',

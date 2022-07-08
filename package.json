@@ -31,6 +31,7 @@
   "dependencies": {
     "chart.js": "^3.8.0",
     "choices.js": "^10.1.0",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "ymaps": "^0.2.1"
   }
 }
