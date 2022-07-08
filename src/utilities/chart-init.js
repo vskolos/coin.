@@ -64,13 +64,13 @@ export default function chartInit(canvas, data, options) {
       return val === 0 ||
         val === Math.max(...arrayForMid) ||
         val === Math.max(...arrayForMax)
-        ? Math.ceil(val).toLocaleString('ru-RU')
+        ? Math.ceil(val).toLocaleString('ru-RU').replace(',', '.')
         : ''
     } else {
       return val === 0 ||
         val === Math.max(...secondHalfOf(arrayForMid)) ||
         val === Math.max(...secondHalfOf(arrayForMax))
-        ? Math.ceil(val).toLocaleString('ru-RU')
+        ? Math.ceil(val).toLocaleString('ru-RU').replace(',', '.')
         : ''
     }
   }

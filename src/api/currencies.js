@@ -1,7 +1,7 @@
 import { HOST } from './config'
 
-export default async function accounts(token) {
-  const response = await fetch(`http://${HOST}/accounts`, {
+export default async function currencies(token) {
+  const response = await fetch(`http://${HOST}/currencies`, {
     headers: {
       Authorization: `Basic ${token}`,
     },

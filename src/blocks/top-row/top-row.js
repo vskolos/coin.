@@ -13,7 +13,7 @@ export default function createTopRow(data) {
   row.append(title)
 
   if (data.filter) {
-    const select = el('select.top-row__select.js-choices')
+    const select = el('select.top-row__select.js-sort')
 
     data.filter.forEach((option) => {
       select.append(
@@ -41,7 +41,7 @@ export default function createTopRow(data) {
         el('span.top-row__balance-title', 'Баланс'),
         el(
           'span.top-row__balance-amount',
-          `${data.balance.toLocaleString('ru-RU')}`
+          `${data.balance.toLocaleString('ru-RU').replace(',', '.')}`
         )
       )
     )

@@ -11,7 +11,7 @@ export default function createAccountCard(account) {
   const id = el('.account-card__id', account.account)
   const balance = el(
     '.account-card__balance',
-    `${account.balance.toLocaleString('ru-RU')} ₽`
+    `${account.balance.toLocaleString('ru-RU').replace(',', '.')} ₽`
   )
 
   const lastTransaction = el('.account-card__transaction')

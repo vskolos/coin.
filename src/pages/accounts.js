@@ -94,7 +94,7 @@ export default async function renderAccountsPage(sort = '') {
   body.innerHTML = ''
   body.append(header, main)
 
-  const select = document.querySelector('.js-choices')
+  const select = topRow.querySelector('.js-sort')
   const filter = new Choices(select, {
     allowHTML: false,
     searchEnabled: false,
