@@ -14,12 +14,9 @@ import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
 import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
-import createAccountsList, {
-  addItemToAccountsList,
-} from '../blocks/accounts-list/accounts-list'
+import AccountsList from '../blocks/accounts-list/accounts-list'
 
 // API
-import accounts from '../api/accounts'
 import createAccount from '../api/create-account'
 
 // Pages
@@ -31,12 +28,8 @@ import Plus from '../assets/images/plus.svg'
 
 // Utilities
 import reload from '../utilities/reload'
-import sortAccounts from '../utilities/sort-accounts'
 
 export default async function renderAccountsPage(sort = '') {
-  const response = await accounts(localStorage.token)
-  const data = response.payload
-
   const body = document.body
   const header = createHeader()
   const headerContainer = createContainer()
@@ -68,21 +61,20 @@ export default async function renderAccountsPage(sort = '') {
     },
   })
 
-  sortAccounts(data, sort)
-
-  const accountsList = createAccountsList(data)
+  const accountsList = await AccountsList.create(localStorage.token)
+  accountsList.sort(sort)
 
   const button = topRow.querySelector('.button')
 
   button.addEventListener('click', async () => {
     const data = await createAccount(localStorage.token)
-    addItemToAccountsList(accountsList, data.payload)
+    accountsList.add(data.payload)
   })
 
   headerContainer.append(logo, burger, menu)
   header.append(headerContainer)
 
-  mainContainer.append(topRow, accountsList)
+  mainContainer.append(topRow, accountsList.element)
 
   main.append(mainContainer)
 
@@ -106,7 +98,7 @@ export default async function renderAccountsPage(sort = '') {
     filter.setChoiceByValue(sort)
   }
 
-  select.addEventListener('change', (event) => {
-    reload(`/accounts?sort=${event.detail.value}`)
-  })
+  select.addEventListener('change', (event) =>
+    accountsList.sort(event.detail.value)
+  )
 }

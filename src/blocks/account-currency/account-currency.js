@@ -3,42 +3,46 @@ import './account-currency.scss'
 import currencies from '../../api/currencies'
 
 export default class AccountCurrency {
-  constructor(token) {
+  constructor(currencies, token = localStorage.token) {
     const div = el('.account-currency')
     const title = el('p.account-currency__title', 'Ваши валюты')
     const ul = el('ul.account-currency__list')
 
     this.element = div
     this.list = ul
+    this.token = token
 
     div.append(title, ul)
 
-    this.init(token)
+    Object.keys(currencies).forEach((key) => this.add(currencies[key]))
   }
 
-  async init(token) {
+  static async create(token = localStorage.token) {
     const response = await currencies(token)
     const data = response.payload
-
-    Object.keys(data).forEach((key) => this.add(data[key]))
+    return new AccountCurrency(data, token)
   }
 
-  async reload(token) {
+  async fetchCurrencies() {
+    const response = await currencies(this.token)
+    const data = response.payload
+    return data
+  }
+
+  async reload() {
+    const currencies = await this.fetchCurrencies()
     this.list.innerHTML = ''
-    await this.init(token)
+    Object.keys(currencies).forEach((key) => this.add(currencies[key]))
   }
 
-  add(data) {
-    const li = el(
-      'li.account-currency__item',
-      el('span.account-currency__code', data.code),
-      el(
-        'span.account-currency__amount',
-        data.amount
-          .toLocaleString('ru-RU', { maximumFractionDigits: 10 })
-          .replace(',', '.')
-      )
+  add(currency) {
+    const li = el('li.account-currency__item')
+    const code = el('span.account-currency__code', currency.code)
+    const amount = el(
+      'span.account-currency__amount',
+      currency.amount.toLocaleString('ru-RU').replace(',', '.')
     )
+    li.append(code, amount)
     this.list.append(li)
   }
 }

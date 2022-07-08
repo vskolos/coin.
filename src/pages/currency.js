@@ -55,7 +55,7 @@ export default async function renderCurrencyPage() {
     title: 'Валютный обмен',
   })
   const currencyInfo = createCurrencyInfo()
-  const accountCurrency = new AccountCurrency(localStorage.token)
+  const accountCurrency = await AccountCurrency.create()
   const currencyExchangeForm = createCurrencyExchangeForm(allCurrenciesList)
 
   const maxCurrencyFeedRows = 21
