@@ -1,11 +1,9 @@
 // CSS
 import 'normalize.css'
 import '../common/common.scss'
-// import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 
 // Libraries
 import JustValidate from 'just-validate'
-// import Choices from 'choices.js'
 
 // Blocks
 import createHeader from '../blocks/header/header'
@@ -19,6 +17,7 @@ import createAccountInfo from '../blocks/account-info/account-info'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
 import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
+import createModal from '../blocks/modal/modal'
 
 // API
 import account from '../api/account'
@@ -105,19 +104,90 @@ export default async function renderAccountPage(id) {
     errorFieldCssClass: 'money-transfer-form__input--invalid',
   })
 
+  function closeModal() {
+    document.querySelector('.modal').remove()
+    document.body.style.removeProperty('overflow')
+  }
+
   async function sendForm() {
-    const response = await transferFunds(
-      {
-        from: data.account,
-        to: moneyTransferForm.account.value,
-        amount: moneyTransferForm.amount.value,
-      },
-      localStorage.token
-    )
-    if (response.error) {
-      alert(response.error)
+    try {
+      const response = await transferFunds(
+        {
+          from: data.account,
+          to: moneyTransferForm.account.value,
+          amount: moneyTransferForm.amount.value,
+        },
+        localStorage.token
+      )
+      console.log(response)
+      if (response.error === 'Invalid account from') {
+        const modal = createModal({
+          title: 'Ошибка',
+          text: 'Номер счёта, с которого осуществляется перевод, не принадлежит вам',
+          primaryButton: {
+            text: 'Закрыть',
+            clickHandler: closeModal,
+          },
+        })
+        document.body.append(modal)
+        document.body.style.overflow = 'hidden'
+      } else if (response.error === 'Invalid account to') {
+        const modal = createModal({
+          title: 'Ошибка',
+          text: 'Счёт, на который осуществляется перевод, не существует',
+          primaryButton: {
+            text: 'Закрыть',
+            clickHandler: closeModal,
+          },
+        })
+        document.body.append(modal)
+        document.body.style.overflow = 'hidden'
+      } else if (response.error === 'Invalid amount') {
+        const modal = createModal({
+          title: 'Ошибка',
+          text: 'Не указана сумма перевода, или она отрицательна',
+          primaryButton: {
+            text: 'Закрыть',
+            clickHandler: closeModal,
+          },
+        })
+        document.body.append(modal)
+        document.body.style.overflow = 'hidden'
+      } else if (response.error === 'Overdraft prevented') {
+        const modal = createModal({
+          title: 'Ошибка',
+          text: 'На счёте недостаточно средств. Уменьшите сумму перевода',
+          primaryButton: {
+            text: 'Закрыть',
+            clickHandler: closeModal,
+          },
+        })
+        document.body.append(modal)
+        document.body.style.overflow = 'hidden'
+      } else {
+        const modal = createModal({
+          title: 'Перевод завершён',
+          text: `Вы перевели ${moneyTransferForm.amount.value}₽ на счёт №${moneyTransferForm.account.value}`,
+          primaryButton: {
+            text: 'Закрыть',
+            clickHandler: () => reload(`/accounts/${data.account}`),
+          },
+        })
+        document.body.append(modal)
+        document.body.style.overflow = 'hidden'
+      }
+    } catch {
+      const modal = createModal({
+        title: 'Ошибка',
+        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
+        primaryButton: {
+          text: 'Закрыть',
+          clickHandler: closeModal,
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
     }
-    reload(`/accounts/${data.account}`)
   }
 
   validation
