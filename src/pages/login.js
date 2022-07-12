@@ -17,7 +17,7 @@ import createModal from '../blocks/modal/modal'
 import login from '../api/login'
 
 // Utilities
-import reload from '../utilities/reload'
+import reload from '../app'
 
 export default function renderLoginPage() {
   const body = document.body

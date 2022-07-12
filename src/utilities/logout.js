@@ -1,4 +1,4 @@
-import reload from './reload'
+import reload from '../app'
 
 export default function logout() {
   localStorage.removeItem('token')

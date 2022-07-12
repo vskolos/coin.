@@ -29,7 +29,7 @@ import Burger from '../assets/images/burger.svg'
 
 // Utilities
 import logout from '../utilities/logout'
-import reload from '../utilities/reload'
+import reload from '../app'
 
 export default async function renderCurrencyPage() {
   const response = await allCurrencies()

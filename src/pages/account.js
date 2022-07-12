@@ -25,8 +25,8 @@ import account from '../api/account'
 import transferFunds from '../api/transfer-funds'
 
 // Utilities
+import reload from '../app'
 import logout from '../utilities/logout'
-import reload from '../utilities/reload'
 import monthlyBalance from '../utilities/monthly-balance'
 import chartInit from '../utilities/chart-init'
 

@@ -22,8 +22,8 @@ import createMoneyTransferHistory from '../blocks/money-transfer-history/money-t
 import account from '../api/account'
 
 // Utilities
+import reload from '../app'
 import logout from '../utilities/logout'
-import reload from '../utilities/reload'
 import monthlyBalance from '../utilities/monthly-balance'
 import monthlyTransactions from '../utilities/monthly-transactions'
 import chartInit from '../utilities/chart-init'

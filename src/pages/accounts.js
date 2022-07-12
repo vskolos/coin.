@@ -27,7 +27,7 @@ import Burger from '../assets/images/burger.svg'
 import Plus from '../assets/images/plus.svg'
 
 // Utilities
-import reload from '../utilities/reload'
+import reload from '../app'
 
 export default async function renderAccountsPage(sort = '') {
   const body = document.body

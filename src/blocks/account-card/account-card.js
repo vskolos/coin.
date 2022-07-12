@@ -1,7 +1,7 @@
 import { el } from 'redom'
 import './account-card.scss'
 import createPrimaryButton from '../button/--primary/button--primary'
-import reload from '../../utilities/reload'
+import reload from '../../app'
 
 // account = { account, balance, mine, transactions }
 // transactions = [ transaction1, transaction2, ... ]
