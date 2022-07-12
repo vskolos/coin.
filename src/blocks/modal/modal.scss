@@ -20,6 +20,10 @@
     display: grid;
     justify-items: center;
     gap: 16px;
+
+    @media (min-width: 480px) {
+      gap: 25px;
+    }
   }
 
   &__title {
@@ -35,6 +39,16 @@
 
     @media (min-width: 576px) {
       font-size: 34px;
+    }
+  }
+
+  &__buttons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 16px;
+
+    @media (min-width: 480px) {
+      gap: 25px;
     }
   }
 }
