@@ -15,6 +15,7 @@ import createContainer from '../blocks/container/container'
 import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import AccountsList from '../blocks/accounts-list/accounts-list'
+import createModal from '../blocks/modal/modal'
 
 // API
 import createAccount from '../api/create-account'
@@ -67,8 +68,46 @@ export default async function renderAccountsPage(sort = '') {
   const button = topRow.querySelector('.button')
 
   button.addEventListener('click', async () => {
-    const data = await createAccount(localStorage.token)
-    accountsList.add(data.payload)
+    try {
+      const data = await createAccount(localStorage.token)
+      accountsList.add(data.payload)
+      accountsList.accounts.push(data.payload)
+
+      const modal = createModal({
+        title: 'Счёт создан',
+        text: `№ ${data.payload.account}`,
+        primaryButton: {
+          text: 'Перейти к счёту',
+          clickHandler: () => {
+            document.body.style.removeProperty('overflow')
+            reload(`/accounts/${data.payload.account}`)
+          },
+        },
+        secondaryButton: {
+          text: 'Закрыть',
+          clickHandler: () => {
+            document.querySelector('.modal').remove()
+            document.body.style.removeProperty('overflow')
+          },
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
+    } catch {
+      const modal = createModal({
+        title: 'Ошибка',
+        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
+        primaryButton: {
+          text: 'Закрыть',
+          clickHandler: () => {
+            document.querySelector('.modal').remove()
+            document.body.style.removeProperty('overflow')
+          },
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
+    }
   })
 
   headerContainer.append(logo, burger, menu)
