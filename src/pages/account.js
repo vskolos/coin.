@@ -196,6 +196,12 @@ export default async function renderAccountPage(id) {
         rule: 'required',
         errorMessage: 'Введите номер счёта',
       },
+      {
+        validator: (value) => {
+          return data.account !== value
+        },
+        errorMessage: 'Перевод самому себе невозможен',
+      },
     ])
     .addField('.money-transfer-form__input--amount', [
       {
