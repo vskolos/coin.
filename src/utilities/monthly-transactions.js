@@ -23,8 +23,6 @@ export default function monthlyTransactions(account, months) {
     return monthlyTransactions
   }
 
-  // TODO: Rewrite function using array.map and array.reduce
-
   for (let i = 0; i < transactions.length; i++) {
     const transaction = transactions[transactions.length - i - 1]
     const incoming = transaction.to === id
