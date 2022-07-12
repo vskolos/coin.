@@ -42,24 +42,28 @@ export default function createMoneyTransferForm() {
   const button = createPrimaryButton({ text: 'Отправить', icon: Envelope })
   button.type = 'submit'
 
-  if (localStorage.autocompleteAccounts) {
-    const data = JSON.parse(localStorage.autocompleteAccounts)
+  if (localStorage.accounts) {
+    const data = JSON.parse(localStorage.accounts).filter((val) =>
+      val.match(/^\d+$/)
+    )
     autocomplete(accountInput, data)
   } else {
-    localStorage.autocompleteAccounts = '[]'
+    localStorage.accounts = '[]'
   }
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()
 
-    if (localStorage.autocompleteAccounts) {
-      const data = JSON.parse(localStorage.autocompleteAccounts)
+    if (localStorage.accounts) {
+      const data = JSON.parse(localStorage.accounts).filter((val) =>
+        val.match(/^\d+$/)
+      )
       if (!data.includes(accountInput.value)) {
         data.push(accountInput.value)
       }
-      localStorage.autocompleteAccounts = JSON.stringify(data)
+      localStorage.accounts = JSON.stringify(data)
     } else {
-      localStorage.autocompleteAccounts = `[${accountInput.value}]`
+      localStorage.accounts = `[${accountInput.value}]`
     }
   })
 
