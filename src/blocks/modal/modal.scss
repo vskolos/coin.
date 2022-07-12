@@ -42,6 +42,10 @@
     }
   }
 
+  &__text {
+    text-align: center;
+  }
+
   &__buttons {
     display: grid;
     grid-auto-flow: column;
