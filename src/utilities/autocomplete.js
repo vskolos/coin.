@@ -15,7 +15,7 @@ export default function autocomplete(input, array) {
       const list = el('ul.autocomplete-list')
 
       array.forEach((entry) => {
-        if (!this.value || entry.match(this.value)) {
+        if (!this.value || (entry.match(this.value) && entry !== this.value)) {
           const item = el('li.autocomplete-list__item', entry)
           const hiddenInput = el('input.autocomplete-list__item-input', {
             type: 'hidden',
@@ -23,8 +23,8 @@ export default function autocomplete(input, array) {
           })
 
           item.append(hiddenInput)
-          item.addEventListener('click', function () {
-            input.value = hiddenInput.value
+          item.addEventListener('click', () => {
+            this.value = hiddenInput.value
             closeAllLists()
           })
 
@@ -62,8 +62,6 @@ export default function autocomplete(input, array) {
     }
   })
 
-  input.addEventListener('blur', closeAllLists)
-
   function addActive(items) {
     // a function to classify an item as "active"
     if (!items) return false
@@ -91,4 +89,8 @@ export default function autocomplete(input, array) {
       }
     })
   }
+
+  document.addEventListener('click', (e) => {
+    closeAllLists(e.target)
+  })
 }

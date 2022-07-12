@@ -145,7 +145,15 @@
     &__item {
       padding: 10px 16px;
       border-radius: 7px;
+      font-size: 12px;
+      line-height: 1.5;
+      cursor: pointer;
 
+      @media (min-width: 480px) {
+        font-size: 16px;
+      }
+
+      &:hover,
       &--active {
         background-color: var(--clr-gray-7);
       }
