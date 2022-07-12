@@ -63,10 +63,13 @@
         position: absolute;
         top: 100%;
         left: 17px;
-        font-size: 12px;
+        font-size: 10px;
         line-height: 1.5;
         color: var(--clr-secondary-4);
 
+        @media (min-width: 576px) {
+          font-size: 12px;
+        }
       }
     }
   }
