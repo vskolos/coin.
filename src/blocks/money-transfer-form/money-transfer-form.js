@@ -5,8 +5,6 @@ import autocomplete from '../../utilities/autocomplete'
 import './money-transfer-form.scss'
 import Envelope from '../../assets/images/envelope.svg'
 
-// TODO: Add account number history using localStorage
-
 export default function createMoneyTransferForm() {
   const form = el('form.money-transfer-form', { autocomplete: 'off' })
   const title = el('p.money-transfer-form__title', 'Новый перевод')
