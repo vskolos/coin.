@@ -11,8 +11,6 @@ function secondHalfOf(array) {
   return array.slice(-halfLength).length > 0 ? array.slice(-halfLength) : array
 }
 
-// TODO: Add 1/4 of array for history page
-
 // data = { labels, datasets }
 // datasets = [ dataset1, dataset2, ... ]
 // datasetN = { data, backgroundColor }
@@ -43,16 +41,35 @@ export default function chartInit(canvas, data, options) {
   })
 
   function onResize(chart) {
-    if (canvas.offsetWidth >= 480) {
-      chart.data.labels = labels
-      chart.data.datasets.forEach((dataset, index) => {
-        dataset.data = datasets[index].data
-      })
+    if (labels.length > 6) {
+      if (canvas.offsetWidth >= 800) {
+        chart.data.labels = labels
+        chart.data.datasets.forEach((dataset, index) => {
+          dataset.data = datasets[index].data
+        })
+      } else if (canvas.offsetWidth >= 480) {
+        chart.data.labels = secondHalfOf(labels)
+        chart.data.datasets.forEach((dataset, index) => {
+          dataset.data = secondHalfOf(datasets[index].data)
+        })
+      } else {
+        chart.data.labels = secondHalfOf(secondHalfOf(labels))
+        chart.data.datasets.forEach((dataset, index) => {
+          dataset.data = secondHalfOf(secondHalfOf(datasets[index].data))
+        })
+      }
     } else {
-      chart.data.labels = secondHalfOf(labels)
-      chart.data.datasets.forEach((dataset, index) => {
-        dataset.data = secondHalfOf(datasets[index].data)
-      })
+      if (canvas.offsetWidth >= 480) {
+        chart.data.labels = labels
+        chart.data.datasets.forEach((dataset, index) => {
+          dataset.data = datasets[index].data
+        })
+      } else {
+        chart.data.labels = secondHalfOf(labels)
+        chart.data.datasets.forEach((dataset, index) => {
+          dataset.data = secondHalfOf(datasets[index].data)
+        })
+      }
     }
     if (canvas.offsetWidth >= 320) {
       Chart.defaults.font.size = 20
@@ -61,19 +78,83 @@ export default function chartInit(canvas, data, options) {
     }
   }
 
+  function tickLabel(val, mid, max) {
+    return val === 0 || val === mid || val === max
+      ? Math.ceil(val).toLocaleString('ru-RU').replace(',', '.')
+      : ''
+  }
+
   function ticksCallback(val) {
-    if (canvas.offsetWidth >= 480) {
-      return val === 0 ||
-        val === Math.max(...arrayForMid) ||
-        val === Math.max(...arrayForMax)
-        ? Math.ceil(val).toLocaleString('ru-RU').replace(',', '.')
-        : ''
+    if (labels.length > 6) {
+      if (canvas.offsetWidth >= 800) {
+        return tickLabel(
+          val,
+          Math.max(...arrayForMid),
+          Math.max(...arrayForMax)
+        )
+      } else if (canvas.offsetWidth >= 480) {
+        return tickLabel(
+          val,
+          Math.max(...secondHalfOf(arrayForMid)),
+          Math.max(...secondHalfOf(arrayForMax))
+        )
+      } else {
+        return tickLabel(
+          val,
+          Math.max(...secondHalfOf(secondHalfOf(arrayForMid))),
+          Math.max(...secondHalfOf(secondHalfOf(arrayForMax)))
+        )
+      }
     } else {
-      return val === 0 ||
-        val === Math.max(...secondHalfOf(arrayForMid)) ||
-        val === Math.max(...secondHalfOf(arrayForMax))
-        ? Math.ceil(val).toLocaleString('ru-RU').replace(',', '.')
-        : ''
+      if (canvas.offsetWidth >= 480) {
+        return tickLabel(
+          val,
+          Math.max(...arrayForMid),
+          Math.max(...arrayForMax)
+        )
+      } else {
+        return tickLabel(
+          val,
+          Math.max(...secondHalfOf(arrayForMid)),
+          Math.max(...secondHalfOf(arrayForMax))
+        )
+      }
+    }
+  }
+
+  function minY(array) {
+    if (labels.length > 6) {
+      if (canvas.offsetWidth >= 800) {
+        return Math.min(Math.min(...array), 0)
+      } else if (canvas.offsetWidth >= 480) {
+        return Math.min(Math.min(...secondHalfOf(array)), 0)
+      } else {
+        return Math.min(Math.min(...secondHalfOf(secondHalfOf(array))), 0)
+      }
+    } else {
+      if (canvas.offsetWidth >= 480) {
+        return Math.min(Math.min(...array), 0)
+      } else {
+        return Math.min(Math.min(...secondHalfOf(array)), 0)
+      }
+    }
+  }
+
+  function maxY(array) {
+    if (labels.length > 6) {
+      if (canvas.offsetWidth >= 800) {
+        return Math.max(...array)
+      } else if (canvas.offsetWidth >= 480) {
+        return Math.max(...secondHalfOf(array))
+      } else {
+        return Math.max(...secondHalfOf(secondHalfOf(array)))
+      }
+    } else {
+      if (canvas.offsetWidth >= 480) {
+        return Math.max(...array)
+      } else {
+        return Math.max(...secondHalfOf(array))
+      }
     }
   }
 
@@ -92,14 +173,8 @@ export default function chartInit(canvas, data, options) {
       stacked: true,
     },
     y: {
-      min:
-        canvas.offsetWidth >= 480
-          ? Math.min(Math.min(...arrayForMin), 0)
-          : Math.min(Math.min(...secondHalfOf(arrayForMin)), 0),
-      max:
-        canvas.offsetWidth >= 480
-          ? Math.max(...arrayForMax)
-          : Math.max(...secondHalfOf(arrayForMax)),
+      min: minY(arrayForMin),
+      max: maxY(arrayForMax),
       grid: {
         drawOnChartArea: false,
         drawBorder: false,
@@ -131,10 +206,28 @@ export default function chartInit(canvas, data, options) {
     },
   }
 
+  function initialLabels(array) {
+    if (labels.length > 6) {
+      if (canvas.offsetWidth >= 800) {
+        return array
+      } else if (canvas.offsetWidth >= 480) {
+        return secondHalfOf(array)
+      } else {
+        return secondHalfOf(secondHalfOf(array))
+      }
+    } else {
+      if (canvas.offsetWidth >= 480) {
+        return array
+      } else {
+        return secondHalfOf(array)
+      }
+    }
+  }
+
   new Chart(canvas, {
     type: 'bar',
     data: {
-      labels: canvas.offsetWidth >= 480 ? labels : secondHalfOf(labels),
+      labels: initialLabels(labels),
       datasets: datasetsConfig,
     },
     options: {
