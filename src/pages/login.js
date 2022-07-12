@@ -11,6 +11,7 @@ import createLogo from '../blocks/logo/logo'
 import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
 import createLoginForm from '../blocks/login-form/login-form'
+import createModal from '../blocks/modal/modal'
 
 // API
 import login from '../api/login'
@@ -46,10 +47,51 @@ export default function renderLoginPage() {
 
   async function sendForm() {
     const data = await login(loginForm.login.value, loginForm.password.value)
-    if (data.error) {
-      alert(data.error)
+    if (data.error === 'No such user') {
+      const modal = createModal({
+        title: 'Ошибка',
+        text: 'Пользователя с таким логином не существует',
+        primaryButton: {
+          text: 'Закрыть',
+          clickHandler: () => {
+            document.querySelector('.modal').remove()
+            document.body.style.removeProperty('overflow')
+          },
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
+      loginForm.login.value = ''
+      loginForm.password.value = ''
+    } else if (data.error === 'Invalid password') {
+      const modal = createModal({
+        title: 'Ошибка',
+        text: 'Введен неверный пароль',
+        primaryButton: {
+          text: 'Закрыть',
+          clickHandler: () => {
+            document.querySelector('.modal').remove()
+            document.body.style.removeProperty('overflow')
+          },
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
+      loginForm.password.value = ''
     } else if (!data.payload.token) {
-      alert('Ошибка: в ответе сервера отсутствует токен')
+      const modal = createModal({
+        title: 'Ошибка',
+        text: 'Что-то пошло не так. В ответе сервера отсутствует токен. Обратитесь в техническую поддержку',
+        primaryButton: {
+          text: 'Закрыть',
+          clickHandler: () => {
+            document.querySelector('.modal').remove()
+            document.body.style.removeProperty('overflow')
+          },
+        },
+      })
+      document.body.append(modal)
+      document.body.style.overflow = 'hidden'
     } else {
       localStorage.setItem('token', data.payload.token)
       reload()
