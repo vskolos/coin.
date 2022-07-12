@@ -3,50 +3,59 @@ import createPrimaryButton from '../button/--primary/button--primary'
 import createSecondaryButton from '../button/--secondary/button--secondary'
 import './modal.scss'
 
-// data = { title, text, primaryButton, secondaryButton }
+// data = { title, text, button }
 // Xbutton = { text, icon, clickHandler }
-export default function createModal(data) {
-  const backdrop = el('.modal')
+export default class Modal {
+  constructor(data) {
+    const backdrop = el('.modal')
+    this.element = backdrop
 
-  const modal = el('.modal__card')
-  backdrop.append(modal)
+    const modal = el('.modal__card')
+    backdrop.append(modal)
 
-  if (data.title) {
-    const title = el('p.modal__title')
-    title.textContent = data.title
-    modal.append(title)
-  }
+    if (data.title) {
+      const title = el('p.modal__title')
+      title.textContent = data.title
+      modal.append(title)
+    }
 
-  if (data.text) {
-    const text = el('span.modal__text', data.text)
-    modal.append(text)
-  }
+    if (data.text) {
+      const text = el('span.modal__text', data.text)
+      modal.append(text)
+    }
 
-  if (data.primaryButton || data.secondaryButton) {
     const buttons = el('.modal__buttons')
     modal.append(buttons)
 
-    if (data.primaryButton) {
+    if (data.button) {
       const primaryButton = createPrimaryButton({
-        text: data.primaryButton.text,
-        icon: data.primaryButton.icon,
+        text: data.button.text,
+        icon: data.button.icon,
       })
-      primaryButton.addEventListener('click', data.primaryButton.clickHandler)
+      primaryButton.addEventListener('click', data.button.clickHandler)
       buttons.append(primaryButton)
-    }
 
-    if (data.secondaryButton) {
-      const secondaryButton = createSecondaryButton({
-        text: data.secondaryButton.text,
-        icon: data.secondaryButton.icon,
+      const closeButton = createSecondaryButton({
+        text: 'Закрыть',
       })
-      secondaryButton.addEventListener(
-        'click',
-        data.secondaryButton.clickHandler
-      )
-      buttons.append(secondaryButton)
+      closeButton.addEventListener('click', () => this.close())
+      buttons.append(closeButton)
+    } else {
+      const closeButton = createPrimaryButton({
+        text: 'Закрыть',
+      })
+      closeButton.addEventListener('click', () => this.close())
+      buttons.append(closeButton)
     }
   }
 
-  return backdrop
+  open() {
+    document.body.append(this.element)
+    document.body.style.overflow = 'hidden'
+  }
+
+  close() {
+    this.element.remove()
+    document.body.style.removeProperty('overflow')
+  }
 }

@@ -17,7 +17,7 @@ import createAccountInfo from '../blocks/account-info/account-info'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
 import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
-import createModal from '../blocks/modal/modal'
+import Modal from '../blocks/modal/modal'
 
 // API
 import account from '../api/account'
@@ -104,11 +104,6 @@ export default async function renderAccountPage(id) {
     errorFieldCssClass: 'money-transfer-form__input--invalid',
   })
 
-  function closeModal() {
-    document.querySelector('.modal').remove()
-    document.body.style.removeProperty('overflow')
-  }
-
   async function sendForm() {
     try {
       const response = await transferFunds(
@@ -119,74 +114,43 @@ export default async function renderAccountPage(id) {
         },
         localStorage.token
       )
-      console.log(response)
       if (response.error === 'Invalid account from') {
-        const modal = createModal({
+        const modal = new Modal({
           title: 'Ошибка',
           text: 'Номер счёта, с которого осуществляется перевод, не принадлежит вам',
-          primaryButton: {
-            text: 'Закрыть',
-            clickHandler: closeModal,
-          },
         })
-        document.body.append(modal)
-        document.body.style.overflow = 'hidden'
+        modal.open()
       } else if (response.error === 'Invalid account to') {
-        const modal = createModal({
+        const modal = new Modal({
           title: 'Ошибка',
           text: 'Счёт, на который осуществляется перевод, не существует',
-          primaryButton: {
-            text: 'Закрыть',
-            clickHandler: closeModal,
-          },
         })
-        document.body.append(modal)
-        document.body.style.overflow = 'hidden'
+        modal.open()
       } else if (response.error === 'Invalid amount') {
-        const modal = createModal({
+        const modal = new Modal({
           title: 'Ошибка',
           text: 'Не указана сумма перевода, или она отрицательна',
-          primaryButton: {
-            text: 'Закрыть',
-            clickHandler: closeModal,
-          },
         })
-        document.body.append(modal)
-        document.body.style.overflow = 'hidden'
+        modal.open()
       } else if (response.error === 'Overdraft prevented') {
-        const modal = createModal({
+        const modal = new Modal({
           title: 'Ошибка',
           text: 'На счёте недостаточно средств. Уменьшите сумму перевода',
-          primaryButton: {
-            text: 'Закрыть',
-            clickHandler: closeModal,
-          },
         })
-        document.body.append(modal)
-        document.body.style.overflow = 'hidden'
+        modal.open()
       } else {
-        const modal = createModal({
+        const modal = new Modal({
           title: 'Перевод завершён',
           text: `Вы перевели ${moneyTransferForm.amount.value}₽ на счёт №${moneyTransferForm.account.value}`,
-          primaryButton: {
-            text: 'Закрыть',
-            clickHandler: () => reload(`/accounts/${data.account}`),
-          },
         })
-        document.body.append(modal)
-        document.body.style.overflow = 'hidden'
+        modal.open()
       }
     } catch {
-      const modal = createModal({
+      const modal = new Modal({
         title: 'Ошибка',
         text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
-        primaryButton: {
-          text: 'Закрыть',
-          clickHandler: closeModal,
-        },
       })
-      document.body.append(modal)
-      document.body.style.overflow = 'hidden'
+      modal.open()
     }
   }
 
