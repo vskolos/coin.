@@ -9,7 +9,7 @@ export default function setInputFilter(input, filter) {
     'focusout',
   ]
   events.forEach((event) => {
-    input.addEventListener(event, function (e) {
+    input.addEventListener(event, function () {
       if (filter(this.value)) {
         // Accepted value
         this.oldValue = this.value
