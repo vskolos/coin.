@@ -1,13 +1,14 @@
 import { el } from 'redom'
 import createPrimaryButton from '../button/--primary/button--primary'
 import setInputFilter from '../../utilities/set-input-filter'
+import autocomplete from '../../utilities/autocomplete'
 import './money-transfer-form.scss'
 import Envelope from '../../assets/images/envelope.svg'
 
 // TODO: Add account number history using localStorage
 
 export default function createMoneyTransferForm() {
-  const form = el('form.money-transfer-form')
+  const form = el('form.money-transfer-form', { autocomplete: 'off' })
   const title = el('p.money-transfer-form__title', 'Новый перевод')
 
   const account = el(
@@ -43,8 +44,25 @@ export default function createMoneyTransferForm() {
   const button = createPrimaryButton({ text: 'Отправить', icon: Envelope })
   button.type = 'submit'
 
+  if (localStorage.autocompleteAccounts) {
+    const data = JSON.parse(localStorage.autocompleteAccounts)
+    autocomplete(accountInput, data)
+  } else {
+    localStorage.autocompleteAccounts = '[]'
+  }
+
   form.addEventListener('submit', (e) => {
     e.preventDefault()
+
+    if (localStorage.autocompleteAccounts) {
+      const data = JSON.parse(localStorage.autocompleteAccounts)
+      if (!data.includes(accountInput.value)) {
+        data.push(accountInput.value)
+      }
+      localStorage.autocompleteAccounts = JSON.stringify(data)
+    } else {
+      localStorage.autocompleteAccounts = `[${accountInput.value}]`
+    }
   })
 
   form.append(title, account, amount, button)
