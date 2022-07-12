@@ -93,7 +93,7 @@ export default function renderLoginPage() {
         localStorage.setItem('token', data.payload.token)
         reload()
       }
-    } catch (err) {
+    } catch {
       const modal = createModal({
         title: 'Ошибка',
         text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
