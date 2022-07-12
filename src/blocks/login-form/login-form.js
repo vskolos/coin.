@@ -8,7 +8,7 @@ export default function createLoginForm() {
   const login = el(
     'label.login-form__label',
     el('span.login-form__label-text', 'Логин'),
-    el('input.login-form__input', {
+    el('input.login-form__input.login-form__input--login', {
       placeholder: 'Введите логин',
       type: 'text',
       name: 'login',
@@ -17,7 +17,7 @@ export default function createLoginForm() {
   const password = el(
     'label.login-form__label',
     el('span.login-form__label-text', 'Пароль'),
-    el('input.login-form__input', {
+    el('input.login-form__input.login-form__input--password', {
       placeholder: 'Введите пароль',
       type: 'password',
       name: 'password',

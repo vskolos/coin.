@@ -58,6 +58,16 @@
         position: absolute;
         right: calc(100% + 9px);
       }
+
+      &--invalid {
+        position: absolute;
+        top: 100%;
+        left: 17px;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--clr-secondary-4);
+
+      }
     }
   }
 
@@ -71,6 +81,10 @@
 
     &::placeholder {
       color: var(--clr-gray-4);
+    }
+
+    &--invalid {
+      border-color: var(--clr-secondary-4);
     }
   }
 }

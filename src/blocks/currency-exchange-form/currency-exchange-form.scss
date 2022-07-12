@@ -48,14 +48,25 @@
   &__label {
     display: contents;
     gap: 20px;
-    font-size: 16px;
-    line-height: 1.25;
 
     &:last-child {
+      position: relative;
       display: flex;
       align-items: center;
       grid-row: 2;
       grid-column: 1 / span 4;
+    }
+
+    &-text {
+      font-size: 16px;
+      line-height: 1.25;
+
+      &--invalid {
+        position: absolute;
+        top: 100%;
+        right: 16px;
+        color: var(--clr-secondary-4);
+      }
     }
   }
 
@@ -140,6 +151,10 @@
 
     &::placeholder {
       color: var(--clr-gray-4);
+    }
+
+    &--invalid {
+      border-color: var(--clr-secondary-4);
     }
   }
 

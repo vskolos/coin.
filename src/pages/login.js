@@ -1,3 +1,6 @@
+// Libraries
+import JustValidate from 'just-validate'
+
 // CSS
 import 'normalize.css'
 import '../common/common.scss'
@@ -35,7 +38,13 @@ export default function renderLoginPage() {
 
   main.style.minHeight = `calc(100vh - ${header.offsetHeight}px)`
 
-  loginForm.addEventListener('submit', async () => {
+  const validation = new JustValidate(loginForm, {
+    errorLabelStyle: {},
+    errorLabelCssClass: 'login-form__label-text--invalid',
+    errorFieldCssClass: 'login-form__input--invalid',
+  })
+
+  async function sendForm() {
     const data = await login(loginForm.login.value, loginForm.password.value)
     if (data.error) {
       alert(data.error)
@@ -45,5 +54,40 @@ export default function renderLoginPage() {
       localStorage.setItem('token', data.payload.token)
       reload()
     }
-  })
+  }
+
+  validation
+    .addField('.login-form__input--login', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите логин',
+      },
+      {
+        rule: 'customRegexp',
+        value: /^\S*$/,
+        errorMessage: 'Логин не должен содержать пробелы',
+      },
+      {
+        rule: 'minLength',
+        value: 6,
+        errorMessage: 'Логин не должен быть короче 6 символов',
+      },
+    ])
+    .addField('.login-form__input--password', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите пароль',
+      },
+      {
+        rule: 'customRegexp',
+        value: /^\S*$/,
+        errorMessage: 'Пароль не должен содержать пробелы',
+      },
+      {
+        rule: 'minLength',
+        value: 6,
+        errorMessage: 'Пароль не должен быть короче 6 символов',
+      },
+    ])
+    .onSuccess(sendForm)
 }

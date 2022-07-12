@@ -4,6 +4,7 @@ import '../common/common.scss'
 // import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 
 // Libraries
+import JustValidate from 'just-validate'
 // import Choices from 'choices.js'
 
 // Blocks
@@ -71,21 +72,6 @@ export default async function renderAccountPage(id) {
   const accountInfo = createAccountInfo()
   const moneyTransferForm = createMoneyTransferForm()
 
-  moneyTransferForm.addEventListener('submit', async () => {
-    const response = await transferFunds(
-      {
-        from: data.account,
-        to: moneyTransferForm.account.value,
-        amount: moneyTransferForm.amount.value,
-      },
-      localStorage.token
-    )
-    if (response.error) {
-      alert(response.error)
-    }
-    reload(`/accounts/${data.account}`)
-  })
-
   const balanceChart = createBalanceChart('Динамика баланса')
   balanceChart.style.cursor = 'pointer'
   balanceChart.addEventListener('click', () =>
@@ -112,6 +98,42 @@ export default async function renderAccountPage(id) {
 
   body.innerHTML = ''
   body.append(header, main)
+
+  const validation = new JustValidate(moneyTransferForm, {
+    errorLabelStyle: {},
+    errorLabelCssClass: 'money-transfer-form__label-text--invalid',
+    errorFieldCssClass: 'money-transfer-form__input--invalid',
+  })
+
+  async function sendForm() {
+    const response = await transferFunds(
+      {
+        from: data.account,
+        to: moneyTransferForm.account.value,
+        amount: moneyTransferForm.amount.value,
+      },
+      localStorage.token
+    )
+    if (response.error) {
+      alert(response.error)
+    }
+    reload(`/accounts/${data.account}`)
+  }
+
+  validation
+    .addField('.money-transfer-form__input--account', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите номер счёта',
+      },
+    ])
+    .addField('.money-transfer-form__input--amount', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите сумму перевода',
+      },
+    ])
+    .onSuccess(sendForm)
 
   const balanceChartCanvas = balanceChart.querySelector('canvas')
   const monthlyBalanceData = monthlyBalance(data, 6)

@@ -2,6 +2,8 @@ import { el } from 'redom'
 import './currency-feed.scss'
 import currencyFeed from '../../api/currency-feed'
 
+// TODO: Add changable rows amount
+
 export default class CurrencyFeed {
   constructor(rows) {
     this.rows = rows

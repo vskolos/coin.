@@ -11,6 +11,8 @@ function secondHalfOf(array) {
   return array.slice(-halfLength).length > 0 ? array.slice(-halfLength) : array
 }
 
+// TODO: Add 1/4 of array for history page
+
 // data = { labels, datasets }
 // datasets = [ dataset1, dataset2, ... ]
 // datasetN = { data, backgroundColor }

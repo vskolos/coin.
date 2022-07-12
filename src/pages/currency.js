@@ -5,6 +5,7 @@ import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 
 // Libraries
 import Choices from 'choices.js'
+import JustValidate from 'just-validate'
 
 // Blocks
 import createHeader from '../blocks/header/header'
@@ -58,7 +59,7 @@ export default async function renderCurrencyPage() {
   const accountCurrency = await AccountCurrency.create()
   const currencyExchangeForm = createCurrencyExchangeForm(allCurrenciesList)
 
-  const maxCurrencyFeedRows = 21
+  const maxCurrencyFeedRows = accountCurrency.list.childNodes.length + 6
   const currencyFeed = new CurrencyFeed(maxCurrencyFeedRows)
 
   headerContainer.append(logo, burger, menu)
@@ -97,7 +98,13 @@ export default async function renderCurrencyPage() {
   })
   toChoices.setChoiceByValue('ETH')
 
-  currencyExchangeForm.addEventListener('submit', async () => {
+  const validation = new JustValidate(currencyExchangeForm, {
+    errorLabelStyle: {},
+    errorLabelCssClass: 'currency-exchange-form__label-text--invalid',
+    errorFieldCssClass: 'currency-exchange-form__input--invalid',
+  })
+
+  async function sendForm() {
     await currencyBuy(
       {
         from: fromChoices.getValue().value,
@@ -107,5 +114,15 @@ export default async function renderCurrencyPage() {
       localStorage.token
     )
     accountCurrency.reload(localStorage.token)
-  })
+    currencyExchangeForm.amount.value = ''
+  }
+
+  validation
+    .addField('.currency-exchange-form__input--amount', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите сумму перевода',
+      },
+    ])
+    .onSuccess(sendForm)
 }
