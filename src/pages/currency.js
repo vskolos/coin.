@@ -19,6 +19,7 @@ import createCurrencyInfo from '../blocks/currency-info/currency-info'
 import AccountCurrency from '../blocks/account-currency/account-currency'
 import createCurrencyExchangeForm from '../blocks/currency-exchange-form/currency-exchange-form'
 import CurrencyFeed from '../blocks/currency-feed/currency-feed'
+import Modal from '../blocks/modal/modal'
 
 // API
 import allCurrencies from '../api/all-currencies'
@@ -105,16 +106,57 @@ export default async function renderCurrencyPage() {
   })
 
   async function sendForm() {
-    await currencyBuy(
-      {
-        from: fromChoices.getValue().value,
-        to: toChoices.getValue().value,
-        amount: currencyExchangeForm.amount.value,
-      },
-      localStorage.token
-    )
-    accountCurrency.reload(localStorage.token)
-    currencyExchangeForm.amount.value = ''
+    try {
+      const response = await currencyBuy(
+        {
+          from: fromChoices.getValue().value,
+          to: toChoices.getValue().value,
+          amount: currencyExchangeForm.amount.value,
+        },
+        localStorage.token
+      )
+      if (response.error === 'Unknown currency code') {
+        const modal = new Modal({
+          title: 'Ошибка',
+          text: 'Что-то пошло не так. Передан неверный код валюты. Обратитесь в техническую поддержку',
+        })
+        modal.open()
+      } else if (response.error === 'Invalid amount') {
+        const modal = new Modal({
+          title: 'Ошибка',
+          text: 'Не указана сумма обмена, или она отрицательна',
+        })
+        modal.open()
+      } else if (response.error === 'Not enough currency') {
+        const modal = new Modal({
+          title: 'Ошибка',
+          text: 'На валютном счёте недостаточно средств. Уменьшите сумму перевода',
+        })
+        modal.open()
+      } else if (response.error === 'Overdraft prevented') {
+        const modal = new Modal({
+          title: 'Ошибка',
+          text: 'На счёте недостаточно средств. Уменьшите сумму перевода',
+        })
+        modal.open()
+      } else {
+        const modal = new Modal({
+          title: 'Обмен завершён',
+          text: `Вы обменяли ${currencyExchangeForm.amount.value} ${
+            fromChoices.getValue().value
+          } на ${toChoices.getValue().value}`,
+        })
+        modal.open()
+        accountCurrency.reload(localStorage.token)
+        currencyExchangeForm.amount.value = ''
+      }
+    } catch {
+      const modal = new Modal({
+        title: 'Ошибка',
+        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
+      })
+      modal.open()
+    }
   }
 
   validation
