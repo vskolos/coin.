@@ -4,7 +4,7 @@ import currencyFeed from '../../api/currency-feed'
 import handleError from '../../utilities/handle-error'
 
 export default class CurrencyFeed {
-  constructor(rows) {
+  constructor(rows = 12) {
     this.rows = rows
 
     const div = el('.currency-feed')
