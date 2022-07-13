@@ -48,15 +48,15 @@ export default async function renderAccountPage(id) {
   const main = createMain()
   const mainContainer = createContainer()
 
-  const topRow = createTopRow({
+  const topRow = createTopRow(['title', 'account', 'balance', 'button'], {
     title: 'Просмотр счёта',
-    account: data.account,
-    balance: data.balance,
+    account: id,
     button: {
       text: 'Вернуться назад',
       icon: Arrow,
     },
   })
+  mainContainer.append(topRow)
 
   const backButton = topRow.querySelector('.button')
   backButton.addEventListener('click', () => reload('/accounts'))
@@ -77,7 +77,7 @@ export default async function renderAccountPage(id) {
   )
 
   accountInfo.append(moneyTransferForm, balanceChart, moneyTransferHistory)
-  mainContainer.append(topRow, accountInfo)
+  mainContainer.append(accountInfo)
   main.append(mainContainer)
 
   body.innerHTML = ''
@@ -133,23 +133,48 @@ export default async function renderAccountPage(id) {
     ])
     .onSuccess(sendForm)
 
-  const balanceChartCanvas = balanceChart.querySelector('canvas')
-  const monthlyBalanceData = monthlyBalance(data, 6)
-
-  chartInit(
-    balanceChartCanvas,
-    {
-      labels: monthlyBalanceData.map((entry) => entry.month),
-      datasets: [
+  account(id, localStorage.token)
+    .then((response) => {
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      return response.payload
+    })
+    .then((data) => {
+      const newTopRow = createTopRow(
+        ['title', 'account', 'balance', 'button'],
         {
-          data: monthlyBalanceData.map((entry) => entry.balance),
-          backgroundColor: '#116ACC',
+          title: 'Просмотр счёта',
+          account: id,
+          balance: data.balance,
+          button: {
+            text: 'Вернуться назад',
+            icon: Arrow,
+          },
+        }
+      )
+      mainContainer.replaceChild(newTopRow, topRow)
+
+      const balanceChartCanvas = balanceChart.querySelector('canvas')
+      balanceChartCanvas.classList.remove('balance-chart__canvas--skeleton')
+      const monthlyBalanceData = monthlyBalance(data, 6)
+
+      chartInit(
+        balanceChartCanvas,
+        {
+          labels: monthlyBalanceData.map((entry) => entry.month),
+          datasets: [
+            {
+              data: monthlyBalanceData.map((entry) => entry.balance),
+              backgroundColor: '#116ACC',
+            },
+          ],
         },
-      ],
-    },
-    {
-      arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
-      arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
-    }
-  )
+        {
+          arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
+          arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
+        }
+      )
+    })
+    .catch((error) => handleError(error))
 }

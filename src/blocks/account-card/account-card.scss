@@ -85,11 +85,5 @@
     @media (min-width: 480px) {
       justify-self: end;
     }
-
-    &--skeleton {
-      color: var(--clr-primary);
-      pointer-events: none;
-      animation: skeleton 800ms ease-in-out infinite alternate;
-    }
   }
 }

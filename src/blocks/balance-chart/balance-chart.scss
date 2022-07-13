@@ -30,5 +30,23 @@
     margin: -10px;
     max-height: 235px;
     max-width: 100%;
+
+    &--skeleton {
+      margin: 0;
+      margin-top: 10px;
+      height: 205px;
+      width: calc(100% - 15px);
+      background-color: var(--clr-gray-7);
+      border-radius: 7px;
+      animation: skeleton 800ms ease-in-out infinite alternate;
+
+      @media (min-width: 480px) {
+        width: calc(100% - 20px);
+      }
+
+      @media (min-width: 576px) {
+        width: calc(100% - 40px);
+      }
+    }
   }
 }

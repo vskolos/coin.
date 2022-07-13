@@ -41,7 +41,7 @@ export default async function renderAccountsPage(sort = '') {
   ])
   const main = createMain()
   const mainContainer = createContainer()
-  const topRow = createTopRow({
+  const topRow = createTopRow(['title', 'filter', 'button'], {
     title: 'Ваши счета',
     filter: [
       { text: 'Сортировка', value: '' },
