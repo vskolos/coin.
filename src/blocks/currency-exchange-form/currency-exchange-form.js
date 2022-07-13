@@ -3,8 +3,6 @@ import './currency-exchange-form.scss'
 import createPrimaryButton from '../button/--primary/button--primary'
 import setInputFilter from '../../utilities/set-input-filter'
 
-// TODO: Add modal with operation message
-
 export default function createCurrencyExchangeForm(currencies) {
   const form = el('form.currency-exchange-form')
   const title = el('p.currency-exchange-form__title', 'Обмен валюты')

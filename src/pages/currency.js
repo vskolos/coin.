@@ -25,6 +25,7 @@ import currencyBuy from '../api/currency-buy'
 // Utilities
 import logout from '../utilities/logout'
 import reload from '../app'
+import handleError from '../utilities/handle-error'
 
 export default async function renderCurrencyPage() {
   const response = await allCurrencies()
@@ -97,47 +98,20 @@ export default async function renderCurrencyPage() {
         },
         localStorage.token
       )
-      if (response.error === 'Unknown currency code') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Что-то пошло не так. Передан неверный код валюты. Обратитесь в техническую поддержку',
-        })
-        modal.open()
-      } else if (response.error === 'Invalid amount') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Не указана сумма обмена, или она отрицательна',
-        })
-        modal.open()
-      } else if (response.error === 'Not enough currency') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'На валютном счёте недостаточно средств. Уменьшите сумму перевода',
-        })
-        modal.open()
-      } else if (response.error === 'Overdraft prevented') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'На счёте недостаточно средств. Уменьшите сумму перевода',
-        })
-        modal.open()
-      } else {
-        const modal = new Modal({
-          title: 'Обмен завершён',
-          text: `Вы обменяли ${currencyExchangeForm.amount.value} ${
-            fromChoices.getValue().value
-          } на ${toChoices.getValue().value}`,
-        })
-        modal.open()
-        accountCurrency.reload(localStorage.token)
-        currencyExchangeForm.amount.value = ''
+      if (response.error) {
+        throw new Error(response.error)
       }
-    } catch {
       const modal = new Modal({
-        title: 'Ошибка',
-        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
+        title: 'Обмен завершён',
+        text: `Вы обменяли ${currencyExchangeForm.amount.value} ${
+          fromChoices.getValue().value
+        } на ${toChoices.getValue().value}`,
       })
       modal.open()
+      accountCurrency.reload(localStorage.token)
+      currencyExchangeForm.amount.value = ''
+    } catch (error) {
+      handleError(error)
     }
   }
 

@@ -25,6 +25,7 @@ import reload from '../app'
 import logout from '../utilities/logout'
 import monthlyBalance from '../utilities/monthly-balance'
 import chartInit from '../utilities/chart-init'
+import handleError from '../utilities/handle-error'
 
 // SVG
 import Arrow from '../assets/images/arrow.svg'
@@ -98,43 +99,16 @@ export default async function renderAccountPage(id) {
         },
         localStorage.token
       )
-      if (response.error === 'Invalid account from') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Номер счёта, с которого осуществляется перевод, не принадлежит вам',
-        })
-        modal.open()
-      } else if (response.error === 'Invalid account to') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Счёт, на который осуществляется перевод, не существует',
-        })
-        modal.open()
-      } else if (response.error === 'Invalid amount') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Не указана сумма перевода, или она отрицательна',
-        })
-        modal.open()
-      } else if (response.error === 'Overdraft prevented') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'На счёте недостаточно средств. Уменьшите сумму перевода',
-        })
-        modal.open()
-      } else {
-        const modal = new Modal({
-          title: 'Перевод завершён',
-          text: `Вы перевели ${moneyTransferForm.amount.value}₽ на счёт №${moneyTransferForm.account.value}`,
-        })
-        modal.open()
+      if (response.error) {
+        throw new Error(response.error)
       }
-    } catch {
       const modal = new Modal({
-        title: 'Ошибка',
-        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
+        title: 'Перевод завершён',
+        text: `Вы перевели ${moneyTransferForm.amount.value}₽ на счёт №${moneyTransferForm.account.value}`,
       })
       modal.open()
+    } catch (error) {
+      handleError(error)
     }
   }
 

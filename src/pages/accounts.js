@@ -25,6 +25,7 @@ import Plus from '../assets/images/plus.svg'
 
 // Utilities
 import reload from '../app'
+import handleError from '../utilities/handle-error'
 
 export default async function renderAccountsPage(sort = '') {
   const body = document.body
@@ -61,6 +62,9 @@ export default async function renderAccountsPage(sort = '') {
   button.addEventListener('click', async () => {
     try {
       const data = await createAccount(localStorage.token)
+      if (data.error) {
+        throw new Error(data.error)
+      }
       accountsList.add(data.payload)
       accountsList.accounts.push(data.payload)
 
@@ -76,12 +80,8 @@ export default async function renderAccountsPage(sort = '') {
         },
       })
       modal.open()
-    } catch {
-      const modal = new Modal({
-        title: 'Ошибка',
-        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
-      })
-      modal.open()
+    } catch (error) {
+      handleError(error)
     }
   })
 

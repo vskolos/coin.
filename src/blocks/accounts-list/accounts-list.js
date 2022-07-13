@@ -2,6 +2,7 @@ import { el } from 'redom'
 import './accounts-list.scss'
 import AccountCard from '../account-card/account-card'
 import accounts from '../../api/accounts'
+import handleError from '../../utilities/handle-error'
 
 export default class AccountsList {
   constructor(sort = '', token = localStorage.token) {
@@ -12,13 +13,19 @@ export default class AccountsList {
     }
 
     accounts(token)
-      .then((response) => response.payload)
+      .then((response) => {
+        if (response.error) {
+          throw new Error(response.error)
+        }
+        return response.payload
+      })
       .then((accounts) => {
         this.accounts = accounts
         this.element.innerHTML = ''
         accounts.forEach((account) => this.add(account))
       })
       .finally(this.sort(sort))
+      .catch((error) => handleError(error))
   }
 
   add(account) {

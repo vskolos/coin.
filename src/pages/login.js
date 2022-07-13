@@ -10,13 +10,13 @@ import createHeader from '../blocks/header/header'
 import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
 import createLoginForm from '../blocks/login-form/login-form'
-import Modal from '../blocks/modal/modal'
 
 // API
 import login from '../api/login'
 
 // Utilities
 import reload from '../app'
+import handleError from '../utilities/handle-error'
 
 export default function renderLoginPage() {
   const body = document.body
@@ -42,37 +42,15 @@ export default function renderLoginPage() {
   async function sendForm() {
     try {
       const data = await login(loginForm.login.value, loginForm.password.value)
-      if (data.error === 'No such user') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Пользователя с таким логином не существует',
-        })
-        modal.open()
-        loginForm.login.value = ''
-        loginForm.password.value = ''
-      } else if (data.error === 'Invalid password') {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Введен неверный пароль',
-        })
-        modal.open()
-        loginForm.password.value = ''
+      if (data.error) {
+        throw new Error(data.error)
       } else if (!data.payload.token) {
-        const modal = new Modal({
-          title: 'Ошибка',
-          text: 'Что-то пошло не так. В ответе сервера отсутствует токен. Обратитесь в техническую поддержку',
-        })
-        modal.open()
-      } else {
-        localStorage.setItem('token', data.payload.token)
-        reload('/accounts')
+        throw new Error('No token')
       }
-    } catch {
-      const modal = new Modal({
-        title: 'Ошибка',
-        text: 'Отстутствует подключение к серверу. Обратитесь в техническую поддержку',
-      })
-      modal.open()
+      localStorage.setItem('token', data.payload.token)
+      reload('/accounts')
+    } catch (error) {
+      handleError(error)
     }
   }
 
