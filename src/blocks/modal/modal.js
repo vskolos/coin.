@@ -33,13 +33,13 @@ export default class Modal {
 
       const closeButton = createSecondaryButton({
         text: 'Закрыть',
-        handler: this.close,
+        handler: () => this.close(),
       })
       buttons.append(closeButton)
     } else {
       const closeButton = createPrimaryButton({
         text: 'Закрыть',
-        handler: this.close,
+        handler: () => this.close(),
       })
       buttons.append(closeButton)
     }
