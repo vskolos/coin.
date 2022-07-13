@@ -2,8 +2,8 @@ import { el } from 'redom'
 import './money-transfer-history.scss'
 
 // account = { account, balance, mine, transactions }
-// transactions = [ transaction1, transaction2, ... ]
-// transactionN = { amount, date, from, to }
+//   transactions = [ transaction1, transaction2, ... ]
+//     transactionN = { amount, date, from, to }
 export default function createMoneyTransferHistory(account, count) {
   const transactions = account.transactions
 

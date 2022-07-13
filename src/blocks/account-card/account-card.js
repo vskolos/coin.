@@ -4,8 +4,8 @@ import createPrimaryButton from '../button/--primary/button--primary'
 import reload from '../../app'
 
 // account = { account, balance, mine, transactions }
-// transactions = [ transaction1, transaction2, ... ]
-// transactionN = { amount, date, from, to }
+//   transactions = [ transaction1, transaction2, ... ]
+//     transactionN = { amount, date, from, to }
 export default function createAccountCard(account) {
   const card = el('.account-card')
   const id = el('.account-card__id')

@@ -1,10 +1,8 @@
 // CSS
 import 'normalize.css'
 import '../common/common.scss'
-// import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 
 // Libraries
-// import Choices from 'choices.js'
 
 // Blocks
 import createHeader from '../blocks/header/header'

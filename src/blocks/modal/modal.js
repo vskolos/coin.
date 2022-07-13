@@ -4,7 +4,7 @@ import createSecondaryButton from '../button/--secondary/button--secondary'
 import './modal.scss'
 
 // data = { title, text, button }
-// Xbutton = { text, icon, clickHandler }
+//   button = { text, icon, clickHandler }
 export default class Modal {
   constructor(data) {
     const backdrop = el('.modal')

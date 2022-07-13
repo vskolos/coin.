@@ -10,7 +10,8 @@ import createMenu from '../menu/menu'
 // SVG
 import Burger from '../../assets/images/burger.svg'
 
-// menuItems = { text, disabled, handler }
+// menuItems = [ item1, item2, ... ]
+//   itemN = { text, disabled, handler }
 export default function createHeader(menuItems) {
   const header = el('header.header')
 

@@ -2,6 +2,8 @@ import { el } from 'redom'
 import './account-currency.scss'
 import currencies from '../../api/currencies'
 
+// currencies = [ currency1, currency2, ... ]
+//   currencyN = { code, amount }
 export default class AccountCurrency {
   constructor(currencies, token = localStorage.token) {
     const div = el('.account-currency')
