@@ -13,7 +13,6 @@
   }
 
   .balance-chart {
-
     @media (min-width: 768px) {
       max-width: 668px;
     }
@@ -23,10 +22,9 @@
     }
 
     &--wide {
-
-    @media (min-width: 768px) {
-      max-width: none;
-    }
+      @media (min-width: 768px) {
+        max-width: none;
+      }
       @media (min-width: 1200px) {
         grid-column: span 2;
       }

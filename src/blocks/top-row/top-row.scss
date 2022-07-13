@@ -41,7 +41,7 @@
     }
 
     &::after {
-      right: 22px
+      right: 22px;
     }
 
     &__list--single {
@@ -131,7 +131,6 @@
       font-size: 34px;
       grid-column: span 2;
     }
-
   }
 
   &__balance {
