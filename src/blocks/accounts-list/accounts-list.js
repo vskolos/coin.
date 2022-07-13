@@ -6,8 +6,7 @@ import handleError from '../../utilities/handle-error'
 
 export default class AccountsList {
   constructor(sort = '', token = localStorage.token) {
-    const ul = el('ul.accounts-list')
-    this.element = ul
+    this.element = el('ul.accounts-list')
     for (let i = 0; i < 6; i++) {
       this.add()
     }

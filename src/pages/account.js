@@ -13,7 +13,7 @@ import createTopRow from '../blocks/top-row/top-row'
 import createAccountInfo from '../blocks/account-info/account-info'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
-import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
+import MoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
 import Modal from '../blocks/modal/modal'
 
 // API
@@ -31,9 +31,6 @@ import handleError from '../utilities/handle-error'
 import Arrow from '../assets/images/arrow.svg'
 
 export default async function renderAccountPage(id) {
-  const response = await account(id, localStorage.token)
-  const data = response.payload
-
   const body = document.body
   const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
@@ -67,16 +64,20 @@ export default async function renderAccountPage(id) {
   const balanceChart = createBalanceChart('Динамика баланса')
   balanceChart.style.cursor = 'pointer'
   balanceChart.addEventListener('click', () =>
-    reload(`/accounts/${data.account}/history`)
+    reload(`/accounts/${id}/history`)
   )
 
-  const moneyTransferHistory = createMoneyTransferHistory(data, 10)
-  moneyTransferHistory.style.cursor = 'pointer'
-  moneyTransferHistory.addEventListener('click', () =>
-    reload(`/accounts/${data.account}/history`)
+  const moneyTransferHistory = new MoneyTransferHistory({}, 10)
+  moneyTransferHistory.element.style.cursor = 'pointer'
+  moneyTransferHistory.element.addEventListener('click', () =>
+    reload(`/accounts/${id}/history`)
   )
 
-  accountInfo.append(moneyTransferForm, balanceChart, moneyTransferHistory)
+  accountInfo.append(
+    moneyTransferForm,
+    balanceChart,
+    moneyTransferHistory.element
+  )
   mainContainer.append(accountInfo)
   main.append(mainContainer)
 
@@ -93,7 +94,7 @@ export default async function renderAccountPage(id) {
     try {
       const response = await transferFunds(
         {
-          from: data.account,
+          from: id,
           to: moneyTransferForm.account.value,
           amount: moneyTransferForm.amount.value,
         },
@@ -120,7 +121,7 @@ export default async function renderAccountPage(id) {
       },
       {
         validator: (value) => {
-          return data.account !== value
+          return id !== value
         },
         errorMessage: 'Перевод самому себе невозможен',
       },
@@ -174,6 +175,12 @@ export default async function renderAccountPage(id) {
           arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
           arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
         }
+      )
+
+      const newMoneyTransferHistory = new MoneyTransferHistory(data, 10)
+      accountInfo.replaceChild(
+        newMoneyTransferHistory.element,
+        moneyTransferHistory.element
       )
     })
     .catch((error) => handleError(error))

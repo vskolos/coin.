@@ -11,7 +11,7 @@ import createContainer from '../blocks/container/container'
 import createTopRow from '../blocks/top-row/top-row'
 import createAccountInfo from '../blocks/account-info/account-info'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
-import createMoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
+import MoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
 
 // API
 import account from '../api/account'
@@ -22,14 +22,12 @@ import logout from '../utilities/logout'
 import monthlyBalance from '../utilities/monthly-balance'
 import monthlyTransactions from '../utilities/monthly-transactions'
 import chartInit from '../utilities/chart-init'
+import handleError from '../utilities/handle-error'
 
 // SVG
 import Arrow from '../assets/images/arrow.svg'
 
 export default async function renderHistoryPage(id) {
-  const response = await account(id, localStorage.token)
-  const data = response.payload
-
   const body = document.body
   const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
@@ -44,10 +42,9 @@ export default async function renderHistoryPage(id) {
   const main = createMain()
   const mainContainer = createContainer()
 
-  const topRow = createTopRow({
+  const topRow = createTopRow(['title', 'account', 'balance', 'button'], {
     title: 'История баланса',
-    account: data.account,
-    balance: data.balance,
+    account: id,
     button: {
       text: 'Вернуться назад',
       icon: Arrow,
@@ -55,9 +52,7 @@ export default async function renderHistoryPage(id) {
   })
 
   const backButton = topRow.querySelector('.button')
-  backButton.addEventListener('click', () =>
-    reload(`/accounts/${data.account}`)
-  )
+  backButton.addEventListener('click', () => reload(`/accounts/${id}`))
 
   const accountInfo = createAccountInfo()
   const balanceChart = createBalanceChart('Динамика баланса')
@@ -66,66 +61,101 @@ export default async function renderHistoryPage(id) {
     'Соотношение входящих/исходящих транзакций'
   )
   transactionsChart.classList.add('balance-chart--wide')
-  const moneyTransferHistory = createMoneyTransferHistory(data, 25)
+  const moneyTransferHistory = new MoneyTransferHistory({}, 25)
 
-  accountInfo.append(balanceChart, transactionsChart, moneyTransferHistory)
+  accountInfo.append(
+    balanceChart,
+    transactionsChart,
+    moneyTransferHistory.element
+  )
   mainContainer.append(topRow, accountInfo)
   main.append(mainContainer)
 
   body.innerHTML = ''
   body.append(header, main)
 
-  const balanceChartCanvas = balanceChart.querySelector('canvas')
-  const monthlyBalanceData = monthlyBalance(data, 12)
-
-  chartInit(
-    balanceChartCanvas,
-    {
-      labels: monthlyBalanceData.map((entry) => entry.month),
-      datasets: [
+  account(id, localStorage.token)
+    .then((response) => {
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      return response.payload
+    })
+    .then((data) => {
+      const newTopRow = createTopRow(
+        ['title', 'account', 'balance', 'button'],
         {
-          data: monthlyBalanceData.map((entry) => entry.balance),
-          backgroundColor: '#116ACC',
+          title: 'Просмотр счёта',
+          account: id,
+          balance: data.balance,
+          button: {
+            text: 'Вернуться назад',
+            icon: Arrow,
+          },
+        }
+      )
+      mainContainer.replaceChild(newTopRow, topRow)
+
+      const balanceChartCanvas = balanceChart.querySelector('canvas')
+      const monthlyBalanceData = monthlyBalance(data, 12)
+
+      chartInit(
+        balanceChartCanvas,
+        {
+          labels: monthlyBalanceData.map((entry) => entry.month),
+          datasets: [
+            {
+              data: monthlyBalanceData.map((entry) => entry.balance),
+              backgroundColor: '#116ACC',
+            },
+          ],
         },
-      ],
-    },
-    {
-      arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
-      arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
-    }
-  )
+        {
+          arrayForMin: monthlyBalanceData.map((entry) => entry.balance),
+          arrayForMax: monthlyBalanceData.map((entry) => entry.balance),
+        }
+      )
 
-  const transactionsChartCanvas = transactionsChart.querySelector('canvas')
-  const monthlyTransactionsData = monthlyTransactions(data, 12)
-  const monthlyTransactionsSum = []
+      const transactionsChartCanvas = transactionsChart.querySelector('canvas')
+      const monthlyTransactionsData = monthlyTransactions(data, 12)
+      const monthlyTransactionsSum = []
 
-  monthlyTransactionsData
-    .map((entry) => entry.income)
-    .forEach((income, index) => {
-      monthlyTransactionsSum.push(
-        income + monthlyTransactionsData.map((entry) => entry.outcome)[index]
+      monthlyTransactionsData
+        .map((entry) => entry.income)
+        .forEach((income, index) => {
+          monthlyTransactionsSum.push(
+            income +
+              monthlyTransactionsData.map((entry) => entry.outcome)[index]
+          )
+        })
+
+      chartInit(
+        transactionsChartCanvas,
+        {
+          labels: monthlyTransactionsData.map((entry) => entry.month),
+          datasets: [
+            {
+              data: monthlyTransactionsData.map((entry) => entry.outcome),
+              backgroundColor: '#FD4E5D',
+            },
+            {
+              data: monthlyTransactionsData.map((entry) => entry.income),
+              backgroundColor: '#76CA66',
+            },
+          ],
+        },
+        {
+          arrayForMin: monthlyTransactionsSum,
+          arrayForMid: monthlyTransactionsData.map((entry) => entry.outcome),
+          arrayForMax: monthlyTransactionsSum,
+        }
+      )
+
+      const newMoneyTransferHistory = new MoneyTransferHistory(data, 25)
+      accountInfo.replaceChild(
+        newMoneyTransferHistory.element,
+        moneyTransferHistory.element
       )
     })
-
-  chartInit(
-    transactionsChartCanvas,
-    {
-      labels: monthlyTransactionsData.map((entry) => entry.month),
-      datasets: [
-        {
-          data: monthlyTransactionsData.map((entry) => entry.outcome),
-          backgroundColor: '#FD4E5D',
-        },
-        {
-          data: monthlyTransactionsData.map((entry) => entry.income),
-          backgroundColor: '#76CA66',
-        },
-      ],
-    },
-    {
-      arrayForMin: monthlyTransactionsSum,
-      arrayForMid: monthlyTransactionsData.map((entry) => entry.outcome),
-      arrayForMax: monthlyTransactionsSum,
-    }
-  )
+    .catch((error) => handleError(error))
 }
