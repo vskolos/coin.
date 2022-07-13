@@ -44,15 +44,18 @@ export default async function renderCurrencyPage() {
   ])
   const main = createMain()
   const mainContainer = createContainer()
-  const topRow = createTopRow({
+  const topRow = createTopRow(['title'], {
     title: 'Валютный обмен',
   })
   const currencyInfo = createCurrencyInfo()
-  const accountCurrency = await AccountCurrency.create()
+  const accountCurrency = new AccountCurrency()
   const currencyExchangeForm = createCurrencyExchangeForm(allCurrenciesList)
 
-  const maxCurrencyFeedRows = accountCurrency.list.childNodes.length + 6
-  const currencyFeed = new CurrencyFeed(maxCurrencyFeedRows)
+  const currencyFeed = new CurrencyFeed()
+  accountCurrency.rows.then((rows) => {
+    console.log(accountCurrency.rows)
+    currencyFeed.rows = rows + 6
+  })
 
   currencyInfo.append(
     accountCurrency.element,
@@ -108,7 +111,7 @@ export default async function renderCurrencyPage() {
         } на ${toChoices.getValue().value}`,
       })
       modal.open()
-      accountCurrency.reload(localStorage.token)
+      accountCurrency.fetch()
       currencyExchangeForm.amount.value = ''
     } catch (error) {
       handleError(error)
