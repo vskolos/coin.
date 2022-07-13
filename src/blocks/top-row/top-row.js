@@ -27,8 +27,6 @@ export default function createTopRow(elements, data) {
 
   if (data.button) {
     button = createPrimaryButton(data.button)
-  } else {
-    button.classList.add('button--skeleton')
   }
 
   if (data.account) {
