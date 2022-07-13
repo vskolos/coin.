@@ -7,11 +7,8 @@ import JustValidate from 'just-validate'
 
 // Blocks
 import createHeader from '../blocks/header/header'
-import createLogo from '../blocks/logo/logo'
-import createMenu from '../blocks/menu/menu'
 import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
-import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import createAccountInfo from '../blocks/account-info/account-info'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
@@ -30,7 +27,6 @@ import monthlyBalance from '../utilities/monthly-balance'
 import chartInit from '../utilities/chart-init'
 
 // SVG
-import Burger from '../assets/images/burger.svg'
 import Arrow from '../assets/images/arrow.svg'
 
 export default async function renderAccountPage(id) {
@@ -38,11 +34,7 @@ export default async function renderAccountPage(id) {
   const data = response.payload
 
   const body = document.body
-  const header = createHeader()
-  const headerContainer = createContainer()
-  const logo = createLogo()
-  const burger = createButton({ icon: Burger })
-  const menu = createMenu([
+  const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: false, handler: () => reload('/accounts') },
     {
@@ -83,17 +75,9 @@ export default async function renderAccountPage(id) {
     reload(`/accounts/${data.account}/history`)
   )
 
-  headerContainer.append(logo, burger, menu)
-  header.append(headerContainer)
-
   accountInfo.append(moneyTransferForm, balanceChart, moneyTransferHistory)
   mainContainer.append(topRow, accountInfo)
   main.append(mainContainer)
-
-  burger.classList.add('button--burger')
-  burger.addEventListener('click', () => {
-    menu.classList.toggle('menu--visible')
-  })
 
   body.innerHTML = ''
   body.append(header, main)

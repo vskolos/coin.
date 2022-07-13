@@ -9,11 +9,8 @@ import JustValidate from 'just-validate'
 
 // Blocks
 import createHeader from '../blocks/header/header'
-import createLogo from '../blocks/logo/logo'
-import createMenu from '../blocks/menu/menu'
 import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
-import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import createCurrencyInfo from '../blocks/currency-info/currency-info'
 import AccountCurrency from '../blocks/account-currency/account-currency'
@@ -25,9 +22,6 @@ import Modal from '../blocks/modal/modal'
 import allCurrencies from '../api/all-currencies'
 import currencyBuy from '../api/currency-buy'
 
-// SVG
-import Burger from '../assets/images/burger.svg'
-
 // Utilities
 import logout from '../utilities/logout'
 import reload from '../app'
@@ -37,11 +31,7 @@ export default async function renderCurrencyPage() {
   const allCurrenciesList = response.payload
 
   const body = document.body
-  const header = createHeader()
-  const headerContainer = createContainer()
-  const logo = createLogo()
-  const burger = createButton({ icon: Burger })
-  const menu = createMenu([
+  const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: false, handler: () => reload('/accounts') },
     {
@@ -63,9 +53,6 @@ export default async function renderCurrencyPage() {
   const maxCurrencyFeedRows = accountCurrency.list.childNodes.length + 6
   const currencyFeed = new CurrencyFeed(maxCurrencyFeedRows)
 
-  headerContainer.append(logo, burger, menu)
-  header.append(headerContainer)
-
   currencyInfo.append(
     accountCurrency.element,
     currencyExchangeForm,
@@ -74,11 +61,6 @@ export default async function renderCurrencyPage() {
   mainContainer.append(topRow, currencyInfo)
 
   main.append(mainContainer)
-
-  burger.classList.add('button--burger')
-  burger.addEventListener('click', () => {
-    menu.classList.toggle('menu--visible')
-  })
 
   body.innerHTML = ''
   body.append(header, main)

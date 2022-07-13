@@ -8,11 +8,8 @@ import Choices from 'choices.js'
 
 // Blocks
 import createHeader from '../blocks/header/header'
-import createLogo from '../blocks/logo/logo'
-import createMenu from '../blocks/menu/menu'
 import createMain from '../blocks/main/main'
 import createContainer from '../blocks/container/container'
-import createButton from '../blocks/button/button'
 import createTopRow from '../blocks/top-row/top-row'
 import AccountsList from '../blocks/accounts-list/accounts-list'
 import Modal from '../blocks/modal/modal'
@@ -24,7 +21,6 @@ import createAccount from '../api/create-account'
 import logout from '../utilities/logout'
 
 // SVG
-import Burger from '../assets/images/burger.svg'
 import Plus from '../assets/images/plus.svg'
 
 // Utilities
@@ -32,11 +28,7 @@ import reload from '../app'
 
 export default async function renderAccountsPage(sort = '') {
   const body = document.body
-  const header = createHeader()
-  const headerContainer = createContainer()
-  const logo = createLogo()
-  const burger = createButton({ icon: Burger })
-  const menu = createMenu([
+  const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: true, handler: () => reload('/accounts') },
     {
@@ -94,17 +86,9 @@ export default async function renderAccountsPage(sort = '') {
     }
   })
 
-  headerContainer.append(logo, burger, menu)
-  header.append(headerContainer)
-
   mainContainer.append(topRow, accountsList.element)
 
   main.append(mainContainer)
-
-  burger.classList.add('button--burger')
-  burger.addEventListener('click', () => {
-    menu.classList.toggle('menu--visible')
-  })
 
   body.innerHTML = ''
   body.append(header, main)
