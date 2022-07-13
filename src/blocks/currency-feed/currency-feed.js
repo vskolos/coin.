@@ -4,20 +4,20 @@ import currencyFeed from '../../api/currency-feed'
 import handleError from '../../utilities/handle-error'
 
 export default class CurrencyFeed {
-  constructor(rows = 12) {
+  constructor({ parent, rows = 12 }) {
+    this.parent = parent
     this.rows = rows
 
-    const div = el('.currency-feed')
+    this.element = el('.currency-feed')
     const title = el(
       'p.currency-feed__title',
       'Изменение курсов в реальном времени'
     )
     const ul = el('ul.currency-feed__list')
 
-    this.element = div
     this.list = ul
 
-    div.append(title, ul)
+    this.element.append(title, ul)
 
     if (localStorage.currencyFeed) {
       const data = JSON.parse(localStorage.currencyFeed)
@@ -38,6 +38,10 @@ export default class CurrencyFeed {
           })
       )
       .catch((error) => handleError(error))
+  }
+
+  mount(parent = this.parent) {
+    parent.append(this.element)
   }
 
   add(data) {

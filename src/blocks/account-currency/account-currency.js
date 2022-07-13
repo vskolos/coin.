@@ -6,16 +6,15 @@ import handleError from '../../utilities/handle-error'
 // currencies = [ currency1, currency2, ... ]
 //   currencyN = { code, amount }
 export default class AccountCurrency {
-  constructor(token = localStorage.token) {
-    const div = el('.account-currency')
-    const title = el('p.account-currency__title', 'Ваши валюты')
-    const ul = el('ul.account-currency__list')
-
+  constructor({ parent, currencyFeed }, token = localStorage.token) {
+    this.parent = parent
+    this.currencyFeed = currencyFeed
     this.token = token
-    this.element = div
-    this.list = ul
+    this.element = el('.account-currency')
+    const title = el('p.account-currency__title', 'Ваши валюты')
+    this.list = el('ul.account-currency__list')
 
-    div.append(title, ul)
+    this.element.append(title, this.list)
 
     for (let i = 0; i < 6; i++) {
       this.add()
@@ -24,24 +23,26 @@ export default class AccountCurrency {
     this.fetch()
   }
 
-  async fetch() {
-    this.rows = new Promise((resolve) => {
-      currencies(this.token)
-        .then((response) => {
-          if (response.error) {
-            throw new Error(response.error)
-          }
-          return response.payload
+  mount(parent = this.parent) {
+    parent.append(this.element)
+  }
+
+  fetch() {
+    currencies(this.token)
+      .then((response) => {
+        if (response.error) {
+          throw new Error(response.error)
+        }
+        return response.payload
+      })
+      .then((currencies) => {
+        this.list.innerHTML = ''
+        Object.keys(currencies).forEach((key) => {
+          this.add(currencies[key])
         })
-        .then((currencies) => {
-          this.list.innerHTML = ''
-          Object.keys(currencies).forEach((key) => {
-            this.add(currencies[key])
-          })
-          resolve(this.list.childElementCount)
-        })
-        .catch((error) => handleError(error))
-    })
+        this.currencyFeed.rows = this.list.childElementCount + 6
+      })
+      .catch((error) => handleError(error))
   }
 
   add(currency) {

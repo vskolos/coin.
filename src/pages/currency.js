@@ -35,17 +35,20 @@ export default function renderCurrencyPage() {
   })
   const currencyInfo = createCurrencyInfo()
 
-  const accountCurrency = new AccountCurrency()
-  currencyInfo.append(accountCurrency.element)
-
-  new CurrencyExchangeForm(currencyInfo, { accountCurrency: accountCurrency })
-
-  const currencyFeed = new CurrencyFeed()
-  accountCurrency.rows.then((rows) => {
-    currencyFeed.rows = rows + 6
+  const currencyFeed = new CurrencyFeed({ parent: currencyInfo })
+  const accountCurrency = new AccountCurrency({
+    parent: currencyInfo,
+    currencyFeed: currencyFeed,
+  })
+  const currencyExchangeForm = new CurrencyExchangeForm({
+    parent: currencyInfo,
+    accountCurrency: accountCurrency,
   })
 
-  currencyInfo.append(currencyFeed.element)
+  accountCurrency.mount()
+  currencyExchangeForm.mount()
+  currencyFeed.mount(currencyInfo)
+
   mainContainer.append(topRow, currencyInfo)
 
   main.append(mainContainer)
