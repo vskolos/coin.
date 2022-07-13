@@ -16,13 +16,11 @@ import createMap from '../blocks/map/map'
 import banks from '../api/banks'
 
 // Utilities
-import logout from '../utilities/logout'
 import reload from '../app'
+import logout from '../utilities/logout'
+import handleError from '../utilities/handle-error'
 
 export default async function renderBanksPage() {
-  const response = await banks()
-  const data = response.payload
-
   const body = document.body
   const header = createHeader([
     { text: 'Банкоматы', disabled: true, handler: () => reload('/banks') },
@@ -36,13 +34,12 @@ export default async function renderBanksPage() {
   ])
   const main = createMain()
   const mainContainer = createContainer()
-  const topRow = createTopRow({
+  const topRow = createTopRow(['title'], {
     title: 'Карта банкоматов',
   })
   const map = createMap()
 
   mainContainer.append(topRow, map)
-
   main.append(mainContainer)
 
   body.innerHTML = ''
@@ -50,15 +47,28 @@ export default async function renderBanksPage() {
 
   main.style.minHeight = `calc(100vh - ${header.offsetHeight}px)`
 
-  ymaps.load('//api-maps.yandex.ru/2.1/?lang=ru_RU').then((maps) => {
-    const banksMap = new maps.Map(map, {
-      center: [55.755819, 37.617644],
-      zoom: 7,
+  banks()
+    .then((response) => {
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      return response.payload
     })
-    data.forEach((point) => {
-      const placemark = new maps.Placemark([point.lat, point.lon])
-      banksMap.geoObjects.add(placemark)
+    .then((data) => {
+      ymaps
+        .load('//api-maps.yandex.ru/2.1/?lang=ru_RU')
+        .then((maps) => {
+          const banksMap = new maps.Map(map, {
+            center: [55.755819, 37.617644],
+            zoom: 7,
+          })
+          data.forEach((point) => {
+            const placemark = new maps.Placemark([point.lat, point.lon])
+            banksMap.geoObjects.add(placemark)
+          })
+          banksMap.setBounds(banksMap.geoObjects.getBounds())
+        })
+        .then(() => map.classList.remove('map--skeleton'))
     })
-    banksMap.setBounds(banksMap.geoObjects.getBounds())
-  })
+    .catch((error) => handleError(error))
 }
