@@ -68,10 +68,10 @@ export default class MoneyTransferHistory {
         colAmount.classList.add('money-transfer-history__row-text--outcome')
       }
     } else {
-      colFrom.classList.add('money-transfer-history__row-text--skeleton')
-      colTo.classList.add('money-transfer-history__row-text--skeleton')
-      colAmount.classList.add('money-transfer-history__row-text--skeleton')
-      colDate.classList.add('money-transfer-history__row-text--skeleton')
+      colFrom.append(el('.money-transfer-history__row-text-skeleton'))
+      colTo.append(el('.money-transfer-history__row-text-skeleton'))
+      colAmount.append(el('.money-transfer-history__row-text-skeleton'))
+      colDate.append(el('.money-transfer-history__row-text-skeleton'))
     }
 
     row.append(colFrom, colTo, colAmount, colDate)

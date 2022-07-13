@@ -48,11 +48,9 @@ export default async function renderHistoryPage(id) {
     button: {
       text: 'Вернуться назад',
       icon: Arrow,
+      handler: () => reload(`/accounts/${id}`),
     },
   })
-
-  const backButton = topRow.querySelector('.button')
-  backButton.addEventListener('click', () => reload(`/accounts/${id}`))
 
   const accountInfo = createAccountInfo()
   const balanceChart = createBalanceChart('Динамика баланса')
@@ -61,7 +59,7 @@ export default async function renderHistoryPage(id) {
     'Соотношение входящих/исходящих транзакций'
   )
   transactionsChart.classList.add('balance-chart--wide')
-  const moneyTransferHistory = new MoneyTransferHistory({}, 25)
+  const moneyTransferHistory = new MoneyTransferHistory(null, 25)
 
   accountInfo.append(
     balanceChart,
@@ -91,12 +89,14 @@ export default async function renderHistoryPage(id) {
           button: {
             text: 'Вернуться назад',
             icon: Arrow,
+            handler: () => reload(`/accounts/${id}`),
           },
         }
       )
       mainContainer.replaceChild(newTopRow, topRow)
 
       const balanceChartCanvas = balanceChart.querySelector('canvas')
+      balanceChartCanvas.classList.remove('balance-chart__canvas--skeleton')
       const monthlyBalanceData = monthlyBalance(data, 12)
 
       chartInit(
@@ -117,6 +117,9 @@ export default async function renderHistoryPage(id) {
       )
 
       const transactionsChartCanvas = transactionsChart.querySelector('canvas')
+      transactionsChartCanvas.classList.remove(
+        'balance-chart__canvas--skeleton'
+      )
       const monthlyTransactionsData = monthlyTransactions(data, 12)
       const monthlyTransactionsSum = []
 

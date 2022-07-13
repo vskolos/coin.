@@ -51,12 +51,10 @@ export default async function renderAccountPage(id) {
     button: {
       text: 'Вернуться назад',
       icon: Arrow,
+      handler: () => reload('/accounts'),
     },
   })
   mainContainer.append(topRow)
-
-  const backButton = topRow.querySelector('.button')
-  backButton.addEventListener('click', () => reload('/accounts'))
 
   const accountInfo = createAccountInfo()
   const moneyTransferForm = createMoneyTransferForm()
@@ -67,7 +65,7 @@ export default async function renderAccountPage(id) {
     reload(`/accounts/${id}/history`)
   )
 
-  const moneyTransferHistory = new MoneyTransferHistory({}, 10)
+  const moneyTransferHistory = new MoneyTransferHistory(null, 10)
   moneyTransferHistory.element.style.cursor = 'pointer'
   moneyTransferHistory.element.addEventListener('click', () =>
     reload(`/accounts/${id}/history`)
@@ -151,6 +149,7 @@ export default async function renderAccountPage(id) {
           button: {
             text: 'Вернуться назад',
             icon: Arrow,
+            handler: () => reload('/accounts'),
           },
         }
       )

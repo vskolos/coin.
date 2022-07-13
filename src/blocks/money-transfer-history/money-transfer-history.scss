@@ -203,6 +203,13 @@
           content: ' ₽'
         }
       }
+
+      &-skeleton {
+        height: 24px;
+        background-color: var(--clr-secondary-3);
+        border-radius: 7px;
+        animation: skeleton 800ms ease-in-out infinite alternate;
+      }
     }
   }
 }
