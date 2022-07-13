@@ -1,6 +1,6 @@
 import { el } from 'redom'
 import './accounts-list.scss'
-import AccountCard from '../account-card/account-card'
+import createAccountCard from '../account-card/account-card'
 import accounts from '../../api/accounts'
 import handleError from '../../utilities/handle-error'
 
@@ -30,8 +30,7 @@ export default class AccountsList {
 
   add(account) {
     const item = el('li.accounts-list__item')
-    const card = new AccountCard(account)
-    item.append(card.element)
+    item.append(createAccountCard(account))
     this.element.append(item)
   }
 
