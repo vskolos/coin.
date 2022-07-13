@@ -1,6 +1,7 @@
 import { el } from 'redom'
 import './currency-feed.scss'
 import currencyFeed from '../../api/currency-feed'
+import handleError from '../../utilities/handle-error'
 
 export default class CurrencyFeed {
   constructor(rows) {
@@ -26,17 +27,17 @@ export default class CurrencyFeed {
       localStorage.currencyFeed = '[]'
     }
 
-    this.init()
-  }
-
-  async init() {
-    const socket = await currencyFeed()
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      if (data.type === 'EXCHANGE_RATE_CHANGE') {
-        this.add(data)
-      }
-    }
+    currencyFeed()
+      .then(
+        (socket) =>
+          (socket.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            if (data.type === 'EXCHANGE_RATE_CHANGE') {
+              this.add(data)
+            }
+          })
+      )
+      .catch((error) => handleError(error))
   }
 
   add(data) {
