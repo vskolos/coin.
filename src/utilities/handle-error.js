@@ -25,7 +25,9 @@ const errorMessage = {
 export default function handleError(error) {
   const modal = new Modal({
     title: 'Ошибка',
-    text: errorMessage[error.message],
+    text: errorMessage[error.message]
+      ? errorMessage[error.message]
+      : error.message,
   })
   modal.open()
 }
