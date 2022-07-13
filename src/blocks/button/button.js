@@ -1,7 +1,7 @@
 import { el } from 'redom'
 import './button.scss'
 
-// data = { text, icon }
+// data = { text, icon, handler }
 export default function createButton(data) {
   const button = el('button.button')
 
@@ -14,6 +14,10 @@ export default function createButton(data) {
   if (data.text) {
     const text = el('span.button__text', data.text)
     button.append(text)
+  }
+
+  if (data.handler) {
+    button.addEventListener('click', data.handler)
   }
 
   return button

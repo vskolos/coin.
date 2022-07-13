@@ -6,7 +6,7 @@ import './top-row.scss'
 // data = { title, filter, button, account, balance }
 //   filter = { option1, option2, ... }
 //     optionN = { text, value }
-//   button = { text, icon }
+//   button = { text, icon, handler }
 export default function createTopRow(elements, data) {
   const row = el('.top-row')
   const title = el('h1.top-row__title', data.title)
@@ -26,10 +26,7 @@ export default function createTopRow(elements, data) {
   }
 
   if (data.button) {
-    button = createPrimaryButton({
-      text: data.button.text,
-      icon: data.button.icon,
-    })
+    button = createPrimaryButton(data.button)
   } else {
     button.classList.add('button--skeleton')
   }

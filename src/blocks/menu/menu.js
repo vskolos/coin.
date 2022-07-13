@@ -10,15 +10,15 @@ export default function createMenu(items) {
 
   items.forEach((item) => {
     const listItem = el('li.menu__item')
-    const button = createSecondaryButton({ text: item.text })
+    const button = createSecondaryButton({
+      text: item.text,
+      handler: item.handler,
+    })
 
     if (item.disabled) {
       button.disabled = true
     }
 
-    if (item.handler) {
-      button.addEventListener('click', item.handler)
-    }
     listItem.append(button)
     list.append(listItem)
   })

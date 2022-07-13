@@ -22,7 +22,12 @@ export default function createHeader(menuItems) {
   container.append(logo)
 
   if (menuItems) {
-    const burger = createButton({ icon: Burger })
+    const burger = createButton({
+      icon: Burger,
+      handler: () => {
+        menu.classList.toggle('menu--visible')
+      },
+    })
     container.append(burger)
 
     const menuList = []
@@ -37,9 +42,6 @@ export default function createHeader(menuItems) {
     container.append(menu)
 
     burger.classList.add('button--burger')
-    burger.addEventListener('click', () => {
-      menu.classList.toggle('menu--visible')
-    })
   }
 
   return header

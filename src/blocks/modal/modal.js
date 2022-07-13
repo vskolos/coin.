@@ -4,7 +4,7 @@ import createSecondaryButton from '../button/--secondary/button--secondary'
 import './modal.scss'
 
 // data = { title, text, button }
-//   button = { text, icon, clickHandler }
+//   button = { text, icon, handler }
 export default class Modal {
   constructor(data) {
     const backdrop = el('.modal')
@@ -28,23 +28,19 @@ export default class Modal {
     modal.append(buttons)
 
     if (data.button) {
-      const primaryButton = createPrimaryButton({
-        text: data.button.text,
-        icon: data.button.icon,
-      })
-      primaryButton.addEventListener('click', data.button.clickHandler)
+      const primaryButton = createPrimaryButton(data.button)
       buttons.append(primaryButton)
 
       const closeButton = createSecondaryButton({
         text: 'Закрыть',
+        handler: this.close,
       })
-      closeButton.addEventListener('click', () => this.close())
       buttons.append(closeButton)
     } else {
       const closeButton = createPrimaryButton({
         text: 'Закрыть',
+        handler: this.close,
       })
-      closeButton.addEventListener('click', () => this.close())
       buttons.append(closeButton)
     }
   }
