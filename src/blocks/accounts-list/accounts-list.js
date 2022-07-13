@@ -1,39 +1,30 @@
 import { el } from 'redom'
 import './accounts-list.scss'
-import createAccountCard from '../account-card/account-card'
+import AccountCard from '../account-card/account-card'
 import accounts from '../../api/accounts'
 
 export default class AccountsList {
-  constructor(accounts, token = localStorage.token) {
+  constructor(sort = '', token = localStorage.token) {
     const ul = el('ul.accounts-list')
     this.element = ul
-    this.accounts = accounts
-    this.token = token
-    accounts.forEach((account) => this.add(account))
-  }
+    for (let i = 0; i < 6; i++) {
+      this.add()
+    }
 
-  static async create(token = localStorage.token) {
-    const response = await accounts(token)
-    const data = response.payload
-    return new AccountsList(data, token)
-  }
-
-  async fetchAccounts() {
-    const response = await accounts(this.token)
-    const data = response.payload
-    this.accounts = data
-    return data
-  }
-
-  async reload() {
-    const accounts = await this.fetchAccounts()
-    this.element.innerHTML = ''
-    accounts.forEach((account) => this.add(account))
+    accounts(token)
+      .then((response) => response.payload)
+      .then((accounts) => {
+        this.accounts = accounts
+        this.element.innerHTML = ''
+        accounts.forEach((account) => this.add(account))
+      })
+      .finally(this.sort(sort))
   }
 
   add(account) {
     const item = el('li.accounts-list__item')
-    item.append(createAccountCard(account))
+    const card = new AccountCard(account)
+    item.append(card.element)
     this.element.append(item)
   }
 

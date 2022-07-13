@@ -54,8 +54,7 @@ export default async function renderAccountsPage(sort = '') {
     },
   })
 
-  const accountsList = await AccountsList.create(localStorage.token)
-  accountsList.sort(sort)
+  const accountsList = new AccountsList(sort)
 
   const button = topRow.querySelector('.button')
 
