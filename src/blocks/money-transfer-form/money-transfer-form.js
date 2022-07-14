@@ -47,10 +47,14 @@ export default function createMoneyTransferForm(id) {
   button.type = 'submit'
 
   if (localStorage.accounts) {
-    const data = JSON.parse(localStorage.accounts).filter((val) =>
-      val.match(/^\d+$/)
-    )
-    autocomplete(accountInput, data)
+    try {
+      const data = JSON.parse(localStorage.accounts).filter((val) =>
+        val.match(/^\d+$/)
+      )
+      autocomplete(accountInput, data)
+    } catch {
+      localStorage.accounts = '[]'
+    }
   } else {
     localStorage.accounts = '[]'
   }
@@ -87,13 +91,17 @@ export default function createMoneyTransferForm(id) {
       modal.open()
 
       if (localStorage.accounts) {
-        const data = JSON.parse(localStorage.accounts).filter((val) =>
-          val.match(/^\d+$/)
-        )
-        if (!data.includes(accountInput.value)) {
-          data.push(accountInput.value)
+        try {
+          const data = JSON.parse(localStorage.accounts).filter((val) =>
+            val.match(/^\d+$/)
+          )
+          if (!data.includes(accountInput.value)) {
+            data.push(accountInput.value)
+          }
+          localStorage.accounts = JSON.stringify(data)
+        } catch {
+          localStorage.accounts = `[${accountInput.value}]`
         }
-        localStorage.accounts = JSON.stringify(data)
       } else {
         localStorage.accounts = `[${accountInput.value}]`
       }
