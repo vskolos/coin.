@@ -35,7 +35,7 @@ export default function createTopRow(elements, data) {
     account.classList.add('top-row__account--skeleton')
   }
 
-  if (data.balance) {
+  if (data.balance || data.balance === 0) {
     balanceAmount.textContent = `${data.balance
       .toLocaleString('ru-RU')
       .replace(',', '.')}`
