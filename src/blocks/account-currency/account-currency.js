@@ -47,6 +47,9 @@ export default class AccountCurrency {
 
     if (currency) {
       code.textContent = currency.code
+      if (currency.amount === 0) {
+        return
+      }
       amount.textContent = currency.amount
         .toLocaleString('ru-RU')
         .replace(',', '.')
