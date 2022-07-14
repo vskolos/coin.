@@ -2,9 +2,6 @@
 import 'normalize.css'
 import '../common/common.scss'
 
-// Libraries
-import JustValidate from 'just-validate'
-
 // Blocks
 import createHeader from '../blocks/header/header'
 import createMain from '../blocks/main/main'
@@ -14,11 +11,9 @@ import createAccountInfo from '../blocks/account-info/account-info'
 import createMoneyTransferForm from '../blocks/money-transfer-form/money-transfer-form'
 import createBalanceChart from '../blocks/balance-chart/balance-chart'
 import MoneyTransferHistory from '../blocks/money-transfer-history/money-transfer-history'
-import Modal from '../blocks/modal/modal'
 
 // API
 import account from '../api/account'
-import transferFunds from '../api/transfer-funds'
 
 // Utilities
 import reload from '../app'
