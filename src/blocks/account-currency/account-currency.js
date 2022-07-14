@@ -6,9 +6,8 @@ import handleError from '../../utilities/handle-error'
 // currencies = [ currency1, currency2, ... ]
 //   currencyN = { code, amount }
 export default class AccountCurrency {
-  constructor({ parent, currencyFeed }, token = localStorage.token) {
-    this.parent = parent
-    this.currencyFeed = currencyFeed
+  constructor({ token = localStorage.token, onInit }) {
+    this.onInit = onInit
     this.token = token
     this.element = el('.account-currency')
     const title = el('p.account-currency__title', 'Ваши валюты')
@@ -21,10 +20,6 @@ export default class AccountCurrency {
     }
 
     this.fetch()
-  }
-
-  mount(parent = this.parent) {
-    parent.append(this.element)
   }
 
   fetch() {
@@ -40,8 +35,8 @@ export default class AccountCurrency {
         Object.keys(currencies).forEach((key) => {
           this.add(currencies[key])
         })
-        this.currencyFeed.rows = this.list.childElementCount + 6
       })
+      .then(() => this.onInit())
       .catch((error) => handleError(error))
   }
 

@@ -9,7 +9,7 @@ import createContainer from '../blocks/container/container'
 import createTopRow from '../blocks/top-row/top-row'
 import createCurrencyInfo from '../blocks/currency-info/currency-info'
 import AccountCurrency from '../blocks/account-currency/account-currency'
-import CurrencyExchangeForm from '../blocks/currency-exchange-form/currency-exchange-form'
+import createCurrencyExchangeForm from '../blocks/currency-exchange-form/currency-exchange-form'
 import CurrencyFeed from '../blocks/currency-feed/currency-feed'
 
 // Utilities
@@ -35,19 +35,20 @@ export default function renderCurrencyPage() {
   })
   const currencyInfo = createCurrencyInfo()
 
-  const currencyFeed = new CurrencyFeed({ parent: currencyInfo })
+  const currencyFeed = new CurrencyFeed()
   const accountCurrency = new AccountCurrency({
-    parent: currencyInfo,
-    currencyFeed: currencyFeed,
-  })
-  const currencyExchangeForm = new CurrencyExchangeForm({
-    parent: currencyInfo,
-    accountCurrency: accountCurrency,
+    onInit: () =>
+      (currencyFeed.rows = accountCurrency.list.childElementCount + 6),
   })
 
-  accountCurrency.mount()
-  currencyExchangeForm.mount()
-  currencyFeed.mount(currencyInfo)
+  const currencyExchangeForm = createCurrencyExchangeForm()
+  currencyExchangeForm.addEventListener('submit', () => accountCurrency.fetch())
+
+  currencyInfo.append(
+    accountCurrency.element,
+    currencyExchangeForm,
+    currencyFeed.element
+  )
 
   mainContainer.append(topRow, currencyInfo)
 

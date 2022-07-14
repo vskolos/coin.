@@ -4,20 +4,18 @@ import currencyFeed from '../../api/currency-feed'
 import handleError from '../../utilities/handle-error'
 
 export default class CurrencyFeed {
-  constructor({ parent, rows = 12 }) {
-    this.parent = parent
-    this.rows = rows
+  constructor() {
+    this.rows = localStorage.currencyFeed
+      ? JSON.parse(localStorage.currencyFeed).length
+      : 12
 
     this.element = el('.currency-feed')
     const title = el(
       'p.currency-feed__title',
       'Изменение курсов в реальном времени'
     )
-    const ul = el('ul.currency-feed__list')
-
-    this.list = ul
-
-    this.element.append(title, ul)
+    this.list = el('ul.currency-feed__list')
+    this.element.append(title, this.list)
 
     if (localStorage.currencyFeed) {
       const data = JSON.parse(localStorage.currencyFeed)
@@ -40,10 +38,6 @@ export default class CurrencyFeed {
       .catch((error) => handleError(error))
   }
 
-  mount(parent = this.parent) {
-    parent.append(this.element)
-  }
-
   add(data) {
     const li = el('li.currency-feed__item')
     const code = el('span.currency-feed__code', `${data.from}/${data.to}`)
@@ -60,7 +54,7 @@ export default class CurrencyFeed {
       code.classList.add('currency-feed__code--negative')
       rate.classList.add('currency-feed__rate--negative')
     }
-    while (this.list.childNodes.length >= this.rows) {
+    while (this.list.childElementCount >= this.rows) {
       this.list.lastChild.remove()
     }
     li.append(code, rate)
