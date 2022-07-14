@@ -34,8 +34,11 @@
     width: max-content;
     max-width: 300px;
 
+    @media (min-width: 480px) {
+      grid-column: span 2;
+    }
+
     @media (min-width: 1024px) {
-      max-width: none;
       min-width: 300px;
       grid-column: 2;
     }
@@ -72,7 +75,7 @@
 
       .choices__item {
         &--selectable {
-          padding: 10px 16px;
+          padding: 10px 16px !important;
           font-size: 16px;
           line-height: 24px;
           color: var(--clr-gray-2);
