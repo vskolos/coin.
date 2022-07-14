@@ -120,6 +120,12 @@ export default function createMoneyTransferForm(id) {
         rule: 'required',
         errorMessage: 'Введите сумму перевода',
       },
+      {
+        validator: (value) => {
+          return value > 0
+        },
+        errorMessage: 'Сумма перевода должна быть больше 0',
+      },
     ])
     .onSuccess(sendForm)
 
