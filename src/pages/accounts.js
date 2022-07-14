@@ -73,7 +73,7 @@ export default async function renderAccountsPage(sort = '') {
         text: `№ ${data.payload.account}`,
         button: {
           text: 'Перейти к счёту',
-          clickHandler: () => {
+          handler: () => {
             document.body.style.removeProperty('overflow')
             reload(`/accounts/${data.payload.account}`)
           },
