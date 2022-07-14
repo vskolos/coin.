@@ -57,7 +57,7 @@ export default async function renderAccountPage(id) {
   mainContainer.append(topRow)
 
   const accountInfo = createAccountInfo()
-  const moneyTransferForm = createMoneyTransferForm()
+  const moneyTransferForm = createMoneyTransferForm(id)
 
   const balanceChart = createBalanceChart('Динамика баланса')
   balanceChart.style.cursor = 'pointer'
@@ -81,56 +81,6 @@ export default async function renderAccountPage(id) {
 
   body.innerHTML = ''
   body.append(header, main)
-
-  const validation = new JustValidate(moneyTransferForm, {
-    errorLabelStyle: {},
-    errorLabelCssClass: 'money-transfer-form__label-text--invalid',
-    errorFieldCssClass: 'money-transfer-form__input--invalid',
-  })
-
-  async function sendForm() {
-    try {
-      const response = await transferFunds(
-        {
-          from: id,
-          to: moneyTransferForm.account.value,
-          amount: moneyTransferForm.amount.value,
-        },
-        localStorage.token
-      )
-      if (response.error) {
-        throw new Error(response.error)
-      }
-      const modal = new Modal({
-        title: 'Перевод завершён',
-        text: `Вы перевели ${moneyTransferForm.amount.value}₽ на счёт №${moneyTransferForm.account.value}`,
-      })
-      modal.open()
-    } catch (error) {
-      handleError(error)
-    }
-  }
-
-  validation
-    .addField('.money-transfer-form__input--account', [
-      {
-        rule: 'required',
-        errorMessage: 'Введите номер счёта',
-      },
-      {
-        validator: (value) => {
-          return id !== value
-        },
-        errorMessage: 'Перевод самому себе невозможен',
-      },
-    ])
-    .addField('.money-transfer-form__input--amount', [
-      {
-        rule: 'required',
-        errorMessage: 'Введите сумму перевода',
-      },
-    ])
-    .onSuccess(sendForm)
 
   account(id, localStorage.token)
     .then((response) => {

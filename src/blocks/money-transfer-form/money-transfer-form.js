@@ -1,11 +1,15 @@
 import { el } from 'redom'
+import JustValidate from 'just-validate'
 import createPrimaryButton from '../button/--primary/button--primary'
 import setInputFilter from '../../utilities/set-input-filter'
 import autocomplete from '../../utilities/autocomplete'
-import './money-transfer-form.scss'
+import Modal from '../modal/modal'
+import transferFunds from '../../api/transfer-funds'
+import handleError from '../../utilities/handle-error'
 import Envelope from '../../assets/images/envelope.svg'
+import './money-transfer-form.scss'
 
-export default function createMoneyTransferForm() {
+export default function createMoneyTransferForm(id) {
   const form = el('form.money-transfer-form', { autocomplete: 'off' })
   const title = el('p.money-transfer-form__title', 'Новый перевод')
 
@@ -53,20 +57,71 @@ export default function createMoneyTransferForm() {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()
-
-    if (localStorage.accounts) {
-      const data = JSON.parse(localStorage.accounts).filter((val) =>
-        val.match(/^\d+$/)
-      )
-      if (!data.includes(accountInput.value)) {
-        data.push(accountInput.value)
-      }
-      localStorage.accounts = JSON.stringify(data)
-    } else {
-      localStorage.accounts = `[${accountInput.value}]`
-    }
   })
 
   form.append(title, account, amount, button)
+
+  const validation = new JustValidate(form, {
+    errorLabelStyle: {},
+    errorLabelCssClass: 'money-transfer-form__label-text--invalid',
+    errorFieldCssClass: 'money-transfer-form__input--invalid',
+  })
+
+  async function sendForm() {
+    try {
+      const response = await transferFunds(
+        {
+          from: id,
+          to: form.account.value,
+          amount: form.amount.value,
+        },
+        localStorage.token
+      )
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      const modal = new Modal({
+        title: 'Перевод завершён',
+        text: `Вы перевели ${form.amount.value}₽ на счёт №${form.account.value}`,
+      })
+      modal.open()
+
+      if (localStorage.accounts) {
+        const data = JSON.parse(localStorage.accounts).filter((val) =>
+          val.match(/^\d+$/)
+        )
+        if (!data.includes(accountInput.value)) {
+          data.push(accountInput.value)
+        }
+        localStorage.accounts = JSON.stringify(data)
+      } else {
+        localStorage.accounts = `[${accountInput.value}]`
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  validation
+    .addField('.money-transfer-form__input--account', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите номер счёта',
+      },
+      {
+        validator: (value) => {
+          return id !== value
+        },
+        errorMessage: 'Перевод самому себе невозможен',
+      },
+    ])
+    .addField('.money-transfer-form__input--amount', [
+      {
+        rule: 'required',
+        errorMessage: 'Введите сумму перевода',
+      },
+    ])
+    .onSuccess(sendForm)
+
   return form
 }
