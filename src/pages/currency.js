@@ -43,8 +43,9 @@ export default function renderCurrencyPage() {
     },
   })
 
-  const currencyExchangeForm = createCurrencyExchangeForm()
-  currencyExchangeForm.addEventListener('submit', () => accountCurrency.fetch())
+  const currencyExchangeForm = createCurrencyExchangeForm({
+    onSubmit: () => accountCurrency.fetch(),
+  })
 
   currencyInfo.append(
     accountCurrency.element,

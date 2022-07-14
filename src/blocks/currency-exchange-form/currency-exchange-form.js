@@ -20,7 +20,7 @@ import '../../../node_modules/choices.js/public/assets/styles/choices.min.css'
 import './currency-exchange-form.scss'
 
 // Создание формы обмена валюты
-export default function createCurrencyExchangeForm() {
+export default function createCurrencyExchangeForm({ onSubmit }) {
   const form = el('form.currency-exchange-form')
   const title = el('p.currency-exchange-form__title', 'Обмен валюты')
   const options = el('.currency-exchange-form__options')
@@ -138,6 +138,9 @@ export default function createCurrencyExchangeForm() {
             if (response.error) {
               throw new Error(response.error)
             }
+
+            onSubmit()
+
             // Открываем модальное окно в случае успеха
             const modal = new Modal({
               title: 'Обмен завершён',
