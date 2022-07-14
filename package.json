@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -13,6 +14,7 @@
   "author": "Vsevolod Kolos",
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "cypress": "^10.3.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
