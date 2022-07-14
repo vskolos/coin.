@@ -13,12 +13,6 @@
   border-radius: 7px;
   cursor: pointer;
 
-  &--skeleton {
-    color: var(--clr-primary);
-    pointer-events: none;
-    animation: skeleton 800ms ease-in-out infinite alternate;
-  }
-
   &__icon {
     & > svg {
       display: block;

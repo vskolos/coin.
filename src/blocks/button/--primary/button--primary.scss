@@ -1,23 +1,33 @@
-.button--primary {
-  background-color: var(--clr-primary);
-  color: var(--clr-white);
-  transition: background-color 100ms ease-in-out;
+@use '../../../common/animation';
 
-  &:hover {
-    background-color: var(--clr-primary-light);
+.button {
+  &--primary {
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+    transition: background-color 100ms ease-in-out;
+
+    &:hover {
+      background-color: var(--clr-primary-light);
+    }
+
+    &:focus-visible {
+      background-color: var(--clr-primary-light);
+      outline: none;
+    }
+
+    &:active {
+      background-color: var(--clr-primary-shade);
+    }
+
+    &:disabled {
+      background-color: var(--clr-gray-5);
+      pointer-events: none;
+    }
   }
 
-  &:focus-visible {
-    background-color: var(--clr-primary-light);
-    outline: none;
-  }
-
-  &:active {
-    background-color: var(--clr-primary-shade);
-  }
-
-  &:disabled {
-    background-color: var(--clr-gray-5);
+  &--skeleton {
+    color: var(--clr-primary);
     pointer-events: none;
+    animation: skeleton 800ms ease-in-out infinite alternate;
   }
 }
