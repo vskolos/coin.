@@ -7,6 +7,9 @@ export default class CurrencyFeed {
   constructor() {
     try {
       this.feed = JSON.parse(localStorage.currencyFeed)
+      if (!this.feed) {
+        throw new Error()
+      }
     } catch {
       localStorage.currencyFeed = '[]'
       this.feed = []
@@ -46,6 +49,7 @@ export default class CurrencyFeed {
 
   load() {
     if (this.feed) {
+      this.list.innerHTML = ''
       this.feed.slice(-this.rows).forEach((entry) => this.add(entry))
     }
   }
