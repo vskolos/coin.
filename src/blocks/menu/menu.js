@@ -2,8 +2,7 @@ import { el } from 'redom'
 import createSecondaryButton from '../button/--secondary/button--secondary'
 import './menu.scss'
 
-// items = [ item1, item2, ... ]
-//   itemN = { text, disabled, handler }
+// Создание блока меню
 export default function createMenu(items) {
   const nav = el('nav.menu')
   const list = el('ul.menu__list')

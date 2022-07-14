@@ -1,7 +1,8 @@
 import { el } from 'redom'
-import Logo from '../../assets/images/logo.svg'
 import './logo.scss'
+import Logo from '../../assets/images/logo.svg'
 
+// Создание логотипа
 export default function createLogo() {
   const logo = el('.logo')
   logo.innerHTML = Logo

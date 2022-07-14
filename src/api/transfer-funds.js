@@ -1,6 +1,6 @@
 import { HOST } from './config'
 
-// data = { from, to, amount }
+// Запрос на перевод средств со счёта на счёт
 export default async function transferFunds(data, token) {
   const response = await fetch(`http://${HOST}/transfer-funds`, {
     method: 'POST',

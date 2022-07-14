@@ -2,9 +2,7 @@ import { el } from 'redom'
 import createPrimaryButton from '../button/--primary/button--primary'
 import './money-transfer-history.scss'
 
-// account = { account, balance, mine, transactions }
-//   transactions = [ transaction1, transaction2, ... ]
-//     transactionN = { amount, date, from, to }
+// Создание блока истории денежных переводов
 export default class MoneyTransferHistory {
   constructor(account, count, pagination = false) {
     this.account = account
@@ -32,28 +30,41 @@ export default class MoneyTransferHistory {
     this.element.append(title, this.table)
 
     if (account) {
+      // Если передали данные счёта, заполняем их
       this.transactions = this.account.transactions
+
       if (this.transactions) {
+        // Если у счёта есть транзации, загружаем их
         this.loadPage(this.page)
+
         if (this.transactions.length > count && pagination) {
+          // Если транзакций больше, чем count, добавляем кнопки пагинации
           this.addPagination()
         }
       }
     } else {
+      // Иначе создаём пустые строки для визуализации загрузки
       for (let i = 0; i < 6; i++) {
         this.add()
       }
     }
   }
 
+  // Загрузка выбранной страницы списка транзакций
   loadPage(page) {
     this.page = page
+
+    // Очищаем таблицу и добавляем строку с заголовками
     this.table.innerHTML = ''
     this.table.append(this.header)
+
     if (this.pagination) {
+      // Реинициализируем пагинацию для отображения нужных кнопок
       this.pagination.remove()
       this.addPagination()
     }
+
+    // Создаём строку таблицы для каждой транзакции из выбранного интервала
     this.transactions
       .slice(
         -this.count * page,
@@ -63,8 +74,11 @@ export default class MoneyTransferHistory {
       .forEach((transaction) => this.add(transaction))
   }
 
+  // Добавление блока пагинации
   addPagination() {
     this.pagination = el('ul.money-transfer-history__pagination')
+
+    // Если мы не в самом начале, выводим по две кнопки справа и слева от актуального номера страницы
     const start = this.page > 3 ? this.page - 2 : 1
     let end =
       (this.page + 2) * this.count < this.transactions.length
@@ -77,15 +91,19 @@ export default class MoneyTransferHistory {
         text: page,
         handler: () => this.loadPage(page),
       })
+
       if (page === this.page) {
+        // Деактивируем кнопку с текущим номером страницы
         button.disabled = true
       }
+
       item.append(button)
       this.pagination.append(item)
     }
     this.element.append(this.pagination)
   }
 
+  // Добавление строки с данными транзакции в таблицу
   add(transaction) {
     const row = el('.money-transfer-history__row')
     const colFrom = el('.money-transfer-history__row-text')
@@ -94,6 +112,7 @@ export default class MoneyTransferHistory {
     const colDate = el('.money-transfer-history__row-text')
 
     if (transaction) {
+      // Если передали данные транзакции, заполняем их
       colFrom.textContent = transaction.from
       colTo.textContent = transaction.to
       colAmount.textContent = transaction.amount
@@ -105,12 +124,14 @@ export default class MoneyTransferHistory {
         day: 'numeric',
       })
 
+      // Проверка транзации на входящую/исходящую
       if (transaction.to === this.account.account) {
         colAmount.classList.add('money-transfer-history__row-text--income')
       } else {
         colAmount.classList.add('money-transfer-history__row-text--outcome')
       }
     } else {
+      // Иначе добавляем классы для визуализации загрузки
       colFrom.append(el('.money-transfer-history__row-text-skeleton'))
       colTo.append(el('.money-transfer-history__row-text-skeleton'))
       colAmount.append(el('.money-transfer-history__row-text-skeleton'))

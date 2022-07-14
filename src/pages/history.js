@@ -1,8 +1,5 @@
-// CSS
-import 'normalize.css'
-import '../common/common.scss'
-
-// Libraries
+// App
+import reload from '../app'
 
 // Blocks
 import createHeader from '../blocks/header/header'
@@ -17,18 +14,24 @@ import MoneyTransferHistory from '../blocks/money-transfer-history/money-transfe
 import account from '../api/account'
 
 // Utilities
-import reload from '../app'
 import logout from '../utilities/logout'
 import monthlyBalance from '../utilities/monthly-balance'
 import monthlyTransactions from '../utilities/monthly-transactions'
 import chartInit from '../utilities/chart-init'
 import handleError from '../utilities/handle-error'
 
+// CSS
+import 'normalize.css'
+import '../common/common.scss'
+
 // SVG
 import Arrow from '../assets/images/arrow.svg'
 
+// Отрисовка страницы подробной истории счёта
 export default async function renderHistoryPage(id) {
   const body = document.body
+
+  // Создаём шапку страницы
   const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: false, handler: () => reload('/accounts') },
@@ -39,9 +42,11 @@ export default async function renderHistoryPage(id) {
     },
     { text: 'Выйти', disabled: false, handler: logout },
   ])
+
   const main = createMain()
   const mainContainer = createContainer()
 
+  // Создаём верхний блок без данных баланса счёта для анимации загрузки
   const topRow = createTopRow(['title', 'account', 'balance', 'button'], {
     title: 'История баланса',
     account: id,
@@ -52,13 +57,20 @@ export default async function renderHistoryPage(id) {
     },
   })
 
+  // Создаём блок информации о счёте
   const accountInfo = createAccountInfo()
+
+  // Создаем блок с графиком динамики баланса
   const balanceChart = createBalanceChart('Динамика баланса')
   balanceChart.classList.add('balance-chart--wide')
+
+  // Создаем блок с графиком соотношения транзакций
   const transactionsChart = createBalanceChart(
     'Соотношение входящих/исходящих транзакций'
   )
   transactionsChart.classList.add('balance-chart--wide')
+
+  // Создаём блок истории транзакций с пустыми данными для анимации загрузки
   const moneyTransferHistory = new MoneyTransferHistory(null, 25)
 
   accountInfo.append(
@@ -69,9 +81,11 @@ export default async function renderHistoryPage(id) {
   mainContainer.append(topRow, accountInfo)
   main.append(mainContainer)
 
+  // Очищаем страницу для перерисовки
   body.innerHTML = ''
   body.append(header, main)
 
+  // Запрашиваем данные счёта с сервера
   account(id, localStorage.token)
     .then((response) => {
       if (response.error) {
@@ -80,6 +94,7 @@ export default async function renderHistoryPage(id) {
       return response.payload
     })
     .then((data) => {
+      // Создаём верхний блок с полученным балансом счёта
       const newTopRow = createTopRow(
         ['title', 'account', 'balance', 'button'],
         {
@@ -93,12 +108,18 @@ export default async function renderHistoryPage(id) {
           },
         }
       )
+
+      // Заменяем старый блок на новый
       mainContainer.replaceChild(newTopRow, topRow)
 
+      // Добавляем к canvas блока с графиком динамики баланса анимацию загрузки
       const balanceChartCanvas = balanceChart.querySelector('canvas')
       balanceChartCanvas.classList.remove('balance-chart__canvas--skeleton')
+
+      // Рассчитываем баланс на начало последних шести месяцев
       const monthlyBalanceData = monthlyBalance(data, 12)
 
+      // Инициализируем Chart.js для отрисовки графика
       chartInit(
         balanceChartCanvas,
         {
@@ -116,13 +137,17 @@ export default async function renderHistoryPage(id) {
         }
       )
 
+      // Добавляем к canvas блока с графиком соотношения транзакций анимацию загрузки
       const transactionsChartCanvas = transactionsChart.querySelector('canvas')
       transactionsChartCanvas.classList.remove(
         'balance-chart__canvas--skeleton'
       )
+
+      // Рассчитываем соотношение транзакций на начало последних двенадцати месяцев
       const monthlyTransactionsData = monthlyTransactions(data, 12)
       const monthlyTransactionsSum = []
 
+      // Создаём отдельный массив с суммой всех транзакций по месяцам для определения верхней/нижней границы
       monthlyTransactionsData
         .map((entry) => entry.income)
         .forEach((income, index) => {
@@ -132,6 +157,7 @@ export default async function renderHistoryPage(id) {
           )
         })
 
+      // Инициализируем Chart.js для отрисовки графика
       chartInit(
         transactionsChartCanvas,
         {
@@ -154,7 +180,10 @@ export default async function renderHistoryPage(id) {
         }
       )
 
+      // Создаём блок истории транзакций с полученными данными и пагинацией
       const newMoneyTransferHistory = new MoneyTransferHistory(data, 25, true)
+
+      // Заменяем старый блок на новый
       accountInfo.replaceChild(
         newMoneyTransferHistory.element,
         moneyTransferHistory.element

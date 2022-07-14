@@ -1,12 +1,10 @@
 import { el } from 'redom'
-import './account-card.scss'
-import createPrimaryButton from '../button/--primary/button--primary'
 import reload from '../../app'
+import createPrimaryButton from '../button/--primary/button--primary'
+import './account-card.scss'
 
-// account = { account, balance, mine, transactions }
-//   transactions = [ transaction1, transaction2, ... ]
-//     transactionN = { amount, date, from, to }
 export default function createAccountCard(account) {
+  // Создание карточки счёта
   const card = el('.account-card')
   const id = el('.account-card__id')
   const balance = el('.account-card__balance')
@@ -17,6 +15,7 @@ export default function createAccountCard(account) {
   const button = createPrimaryButton({ text: 'Открыть' })
 
   if (account) {
+    // Если передали данные счёта, заполняем их
     id.textContent = account.account
     balance.textContent = `${account.balance
       .toLocaleString('ru-RU')
@@ -34,6 +33,7 @@ export default function createAccountCard(account) {
       reload(`/accounts/${account.account}`)
     )
   } else {
+    // Иначе добавляем классы для визуализации загрузки
     id.classList.add('account-card__id--skeleton')
     balance.classList.add('account-card__balance--skeleton')
     lastTransaction.classList.add('account-card__transaction--skeleton')

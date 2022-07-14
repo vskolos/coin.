@@ -1,7 +1,7 @@
 import { el } from 'redom'
 import './button.scss'
 
-// data = { text, icon, handler }
+// Создание кнопки
 export default function createButton(data) {
   const button = el('button.button')
 

@@ -1,6 +1,6 @@
 import { HOST } from './config'
 
-// data = { from, to, amount }
+// Запрос на обмен валюты
 export default async function currencyBuy(data, token) {
   const response = await fetch(`http://${HOST}/currency-buy`, {
     method: 'POST',

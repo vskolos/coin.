@@ -1,6 +1,7 @@
 import { el } from 'redom'
 import './balance-chart.scss'
 
+// Создание блока для отрисовки графика
 export default function createBalanceChart(name) {
   const div = el('.balance-chart')
   const title = el('p.balance-chart__title', name)

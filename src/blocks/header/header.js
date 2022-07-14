@@ -1,5 +1,5 @@
+// Libraries
 import { el } from 'redom'
-import './header.scss'
 
 // Blocks
 import createContainer from '../container/container'
@@ -7,11 +7,13 @@ import createLogo from '../logo/logo'
 import createButton from '../button/button'
 import createMenu from '../menu/menu'
 
+// CSS
+import './header.scss'
+
 // SVG
 import Burger from '../../assets/images/burger.svg'
 
-// menuItems = [ item1, item2, ... ]
-//   itemN = { text, disabled, handler }
+// Создание шапки страницы
 export default function createHeader(menuItems) {
   const header = el('header.header')
 

@@ -39,7 +39,7 @@ export default function renderCurrencyPage() {
   const accountCurrency = new AccountCurrency({
     onInit: () => {
       currencyFeed.rows = accountCurrency.list.childElementCount + 6
-      currencyFeed.load()
+      currencyFeed.reload()
     },
   })
 

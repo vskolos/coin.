@@ -1,7 +1,7 @@
 import createButton from '../button'
 import './button--primary.scss'
 
-// data = { text, icon }
+// Создание основной кнопки
 export default function createPrimaryButton(data) {
   const button = createButton(data)
   button.classList.add('button--primary')

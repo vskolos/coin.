@@ -1,10 +1,8 @@
-// CSS
-import 'normalize.css'
-import '../common/common.scss'
-import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
-
 // Libraries
 import Choices from 'choices.js'
+
+// App
+import reload from '../app'
 
 // Blocks
 import createHeader from '../blocks/header/header'
@@ -17,18 +15,23 @@ import Modal from '../blocks/modal/modal'
 // API
 import createAccount from '../api/create-account'
 
-// Pages
+// Utilities
 import logout from '../utilities/logout'
+import handleError from '../utilities/handle-error'
+
+// CSS
+import 'normalize.css'
+import '../common/common.scss'
+import '../../node_modules/choices.js/public/assets/styles/choices.min.css'
 
 // SVG
 import Plus from '../assets/images/plus.svg'
 
-// Utilities
-import reload from '../app'
-import handleError from '../utilities/handle-error'
-
-export default async function renderAccountsPage(sort = '') {
+// Отрисовка страницы списка счетов
+export default async function renderAccountsPage() {
   const body = document.body
+
+  // Создаём шапку страницы
   const header = createHeader([
     { text: 'Банкоматы', disabled: false, handler: () => reload('/banks') },
     { text: 'Счета', disabled: true, handler: () => reload('/accounts') },
@@ -39,11 +42,14 @@ export default async function renderAccountsPage(sort = '') {
     },
     { text: 'Выйти', disabled: false, handler: logout },
   ])
+
   const main = createMain()
   const mainContainer = createContainer()
-  const topRow = createTopRow(['title', 'filter', 'button'], {
+
+  // Создаём верхний блок
+  const topRow = createTopRow(['title', 'sort', 'button'], {
     title: 'Ваши счета',
-    filter: [
+    sort: [
       { text: 'Сортировка', value: '' },
       { text: 'По номеру', value: 'account' },
       { text: 'По балансу', value: 'balance' },
@@ -52,58 +58,58 @@ export default async function renderAccountsPage(sort = '') {
     button: {
       text: 'Создать новый счёт',
       icon: Plus,
+      handler: async () => {
+        try {
+          // Запрос создания счёта на сервер
+          const data = await createAccount(localStorage.token)
+          if (data.error) {
+            throw new Error(data.error)
+          }
+
+          // Добавляем данные в DOM и в свойство класса на случай сортировки
+          accountsList.add(data.payload)
+          accountsList.accounts.push(data.payload)
+
+          // Открываем модальное окно в случае успеха
+          const modal = new Modal({
+            title: 'Счёт создан',
+            text: `№ ${data.payload.account}`,
+            button: {
+              text: 'Перейти к счёту',
+              handler: () => {
+                document.body.style.removeProperty('overflow')
+                reload(`/accounts/${data.payload.account}`)
+              },
+            },
+          })
+          modal.open()
+        } catch (error) {
+          handleError(error)
+        }
+      },
     },
   })
 
-  const accountsList = new AccountsList(sort)
-
-  const button = topRow.querySelector('.button')
-
-  button.addEventListener('click', async () => {
-    try {
-      const data = await createAccount(localStorage.token)
-      if (data.error) {
-        throw new Error(data.error)
-      }
-      accountsList.add(data.payload)
-      accountsList.accounts.push(data.payload)
-
-      const modal = new Modal({
-        title: 'Счёт создан',
-        text: `№ ${data.payload.account}`,
-        button: {
-          text: 'Перейти к счёту',
-          handler: () => {
-            document.body.style.removeProperty('overflow')
-            reload(`/accounts/${data.payload.account}`)
-          },
-        },
-      })
-      modal.open()
-    } catch (error) {
-      handleError(error)
-    }
-  })
+  // Создаем список счетов
+  const accountsList = new AccountsList()
 
   mainContainer.append(topRow, accountsList.element)
-
   main.append(mainContainer)
 
+  // Очищаем страницу для перерисовки
   body.innerHTML = ''
   body.append(header, main)
 
+  // Инициализируем Choices.js для вариантов сортировки счетов
   const select = topRow.querySelector('.js-sort')
-  const filter = new Choices(select, {
+  new Choices(select, {
     allowHTML: false,
     searchEnabled: false,
     shouldSort: false,
     itemSelectText: '',
   })
 
-  if (sort) {
-    filter.setChoiceByValue(sort)
-  }
-
+  // Добавляем сортировку счетов
   select.addEventListener('change', (event) =>
     accountsList.sort(event.detail.value)
   )

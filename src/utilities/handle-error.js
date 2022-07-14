@@ -1,5 +1,6 @@
 import Modal from '../blocks/modal/modal'
 
+// Объект перевода кодов ошибок в их текстовые варианты
 const errorMessage = {
   Unauthorized:
     'В запросе отсутствует токен. Обратитесь в техническую поддержку',
@@ -22,10 +23,11 @@ const errorMessage = {
     'На валютном счёте недостаточно средств. Уменьшите сумму перевода',
 }
 
+// Открытие модального окна с тектом ошибки
 export default function handleError(error) {
-  console.log(error)
   const modal = new Modal({
     title: 'Ошибка',
+    // Если код ошибки отсутствует в объекте, выводим текст ошибки как есть
     text: errorMessage[error.message]
       ? errorMessage[error.message]
       : error.message,

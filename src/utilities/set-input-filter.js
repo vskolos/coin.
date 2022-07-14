@@ -1,3 +1,4 @@
+// Добавление фильтра filter на ввод в поле input
 export default function setInputFilter(input, filter) {
   const events = [
     'input',
@@ -11,16 +12,16 @@ export default function setInputFilter(input, filter) {
   events.forEach((event) => {
     input.addEventListener(event, function () {
       if (filter(this.value)) {
-        // Accepted value
+        // Если фильтр пройден
         this.oldValue = this.value
         this.oldSelectionStart = this.selectionStart
         this.oldSelectionEnd = this.selectionEnd
       } else if (Object.prototype.hasOwnProperty.call(this, 'oldValue')) {
-        // Rejected value - restore the previous one
+        // Если фильтр не пройден, восстанавливаем предыдущее значение
         this.value = this.oldValue
         this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd)
       } else {
-        // Rejected value - nothing to restore
+        // Если фильтр не пройден, и нечего восстанавливать
         this.value = ''
       }
     })
