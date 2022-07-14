@@ -169,11 +169,24 @@
     border: 1px solid var(--clr-gray-5);
     border-radius: 7px;
 
+    &:hover {
+      border-color: var(--clr-primary);
+      background-color: var(--clr-primary-lightest);
+    }
+
+    &:focus-visible {
+      border-color: var(--clr-primary);
+      background-color: var(--clr-primary-lightest);
+      outline: none;
+    }
+
     &::placeholder {
       color: var(--clr-gray-4);
     }
 
-    &--invalid {
+    &--invalid,
+    &--invalid:hover,
+    &--invalid:focus-visible {
       border-color: var(--clr-secondary-4);
     }
   }
