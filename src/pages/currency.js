@@ -37,8 +37,10 @@ export default function renderCurrencyPage() {
 
   const currencyFeed = new CurrencyFeed()
   const accountCurrency = new AccountCurrency({
-    onInit: () =>
-      (currencyFeed.rows = accountCurrency.list.childElementCount + 6),
+    onInit: () => {
+      currencyFeed.rows = accountCurrency.list.childElementCount + 6
+      currencyFeed.load()
+    },
   })
 
   const currencyExchangeForm = createCurrencyExchangeForm()

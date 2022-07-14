@@ -5,9 +5,13 @@ import handleError from '../../utilities/handle-error'
 
 export default class CurrencyFeed {
   constructor() {
-    this.rows = localStorage.currencyFeed
-      ? JSON.parse(localStorage.currencyFeed).length
-      : 12
+    try {
+      this.feed = JSON.parse(localStorage.currencyFeed)
+    } catch {
+      localStorage.currencyFeed = '[]'
+      this.feed = []
+    }
+    this.rows = 12
 
     this.element = el('.currency-feed')
     const title = el(
@@ -17,25 +21,33 @@ export default class CurrencyFeed {
     this.list = el('ul.currency-feed__list')
     this.element.append(title, this.list)
 
-    if (localStorage.currencyFeed) {
-      const data = JSON.parse(localStorage.currencyFeed)
-      localStorage.currencyFeed = '[]'
-      data.forEach((entry) => this.add(entry))
-    } else {
-      localStorage.currencyFeed = '[]'
-    }
+    this.load()
 
     currencyFeed()
       .then(
         (socket) =>
           (socket.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            if (data.type === 'EXCHANGE_RATE_CHANGE') {
-              this.add(data)
+            try {
+              const data = JSON.parse(event.data)
+              if (data.type === 'EXCHANGE_RATE_CHANGE') {
+                this.add(data)
+                this.feed.push(data)
+                localStorage.currencyFeed = JSON.stringify(
+                  this.feed.slice(-100)
+                )
+              }
+            } catch (error) {
+              throw new Error(error)
             }
           })
       )
       .catch((error) => handleError(error))
+  }
+
+  load() {
+    if (this.feed) {
+      this.feed.slice(-this.rows).forEach((entry) => this.add(entry))
+    }
   }
 
   add(data) {
@@ -59,12 +71,5 @@ export default class CurrencyFeed {
     }
     li.append(code, rate)
     this.list.prepend(li)
-
-    const localStorageData = JSON.parse(localStorage.currencyFeed)
-    while (localStorageData.length >= this.rows) {
-      localStorageData.pop()
-    }
-    localStorageData.push(data)
-    localStorage.setItem('currencyFeed', JSON.stringify(localStorageData))
   }
 }
