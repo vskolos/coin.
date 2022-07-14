@@ -21,13 +21,15 @@ export default function createCurrencyExchangeForm() {
     el('span.currency-exchange-form__label-text', 'Из')
   )
   const fromSelect = el(
-    'select.currency-exchange-form__select.js-exchange-from'
+    'select.currency-exchange-form__select.currency-exchange-form__select--skeleton.js-exchange-from'
   )
   const to = el(
     'label.currency-exchange-form__label',
     el('span.currency-exchange-form__label-text', 'в')
   )
-  const toSelect = el('select.currency-exchange-form__select.js-exchange-to')
+  const toSelect = el(
+    'select.currency-exchange-form__select.currency-exchange-form__select--skeleton.js-exchange-to'
+  )
 
   const amount = el('label.currency-exchange-form__label', 'Сумма')
   const amountInput = el(
