@@ -103,6 +103,12 @@ export default function createCurrencyExchangeForm() {
             rule: 'required',
             errorMessage: 'Введите сумму перевода',
           },
+          {
+            validator: (value) => {
+              return value > 0
+            },
+            errorMessage: 'Сумма не должна быть 0',
+          },
         ])
         .onSuccess(async () => {
           try {
