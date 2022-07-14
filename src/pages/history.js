@@ -154,7 +154,7 @@ export default async function renderHistoryPage(id) {
         }
       )
 
-      const newMoneyTransferHistory = new MoneyTransferHistory(data, 25)
+      const newMoneyTransferHistory = new MoneyTransferHistory(data, 25, true)
       accountInfo.replaceChild(
         newMoneyTransferHistory.element,
         moneyTransferHistory.element
