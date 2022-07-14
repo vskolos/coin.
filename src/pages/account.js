@@ -177,6 +177,10 @@ export default async function renderAccountPage(id) {
       )
 
       const newMoneyTransferHistory = new MoneyTransferHistory(data, 10)
+      newMoneyTransferHistory.element.style.cursor = 'pointer'
+      newMoneyTransferHistory.element.addEventListener('click', () =>
+        reload(`/accounts/${id}/history`)
+      )
       accountInfo.replaceChild(
         newMoneyTransferHistory.element,
         moneyTransferHistory.element
